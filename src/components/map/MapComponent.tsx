@@ -10,7 +10,7 @@ function MapComponent() {
     // Инициализация карты только после монтирования компонента
     if (mapRef.current) {
       // Создаем экземпляр карты, центруем его на условных координатах
-      const map = leaflet.map(mapRef.current).setView([55.751244, 37.618423], 13);
+      const map = leaflet.map(mapRef.current).setView([52.15, 21.026], 25);
 
       // Добавляем слой с плитками (тайлами) OpenStreetMap
       leaflet
