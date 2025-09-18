@@ -1,13 +1,15 @@
 import './assets/styles/global.css';
 import 'leaflet/dist/leaflet.css';
 import MapComponent from './components/map/MapComponent';
-import styles from './App.module.css';
+
+import "./assets/styles/global.css";
+import "leaflet/dist/leaflet.css";
 
 function App() {
   return (
-    <div className={styles.app}>
+    <div>
       <h1>Walking Game</h1> 
-      <div className={styles.mapContainer}>
+      <div >
         <MapComponent />
       </div>
     </div>
@@ -15,3 +17,4 @@ function App() {
 }
 
 export default App;
+
