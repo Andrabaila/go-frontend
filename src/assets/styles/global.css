@@ -1,14 +1,18 @@
 /* src/assets/styles/global.css */
 
 /* Современный CSS Reset */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
 /* Размеры html/body/root для flex-контейнеров */
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   width: 100%;
 }
