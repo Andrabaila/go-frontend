@@ -3,9 +3,8 @@
 import { useState, useMemo } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 
-import ObjectLayer from '@/components/map/ObjectLayer';
-import ObjectFilterPanel from '@/components/map/ObjectFilterPanel';
-import geoJsonData from '@/components/map/osmData.json';
+import { ObjectLayer, ObjectFilterPanel } from '@/components';
+import geoJsonData from '@/assets/data/osmData.json';
 import type { MapFeatureCollection } from '@/types';
 
 export default function MapComponent() {

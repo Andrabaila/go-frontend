@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import createMap from '../utils/createMap';
 import addTileLayer from '../utils/addTileLayer';
 import destroyMap from '../utils/destroyMap';
-import createFogOfWarLayer from '../layers/fogOfWarLayer';
+import createFogOfWarLayer from '../components/map/FogOfWarCanvas';
 import { DEFAULT_CENTER, DEFAULT_ZOOM } from '../constants/mapConfig';
 
 function useInitMap(mapRef: React.RefObject<HTMLDivElement>) {
