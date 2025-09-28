@@ -79,3 +79,24 @@
 
 - Пулл-реквесты содержат описание _что изменено и зачем_.
 - Один PR = одна логическая задача.
+
+## 9. Импорты типов
+
+Все типы централизованы в src/types/ и реэкспортируются через src/types/index.ts.
+
+Импорты типов должны идти только через @/types:
+
+import type { Player, Quest, MapFeatureCollection } from '@/types'; // ✅
+
+Запрещены точечные импорты:
+
+import type { MapFeatureCollection } from '@/types/map'; // ❌
+
+ESLint-правило:
+
+'no-restricted-imports': [
+'error',
+{
+patterns: ['@/types/*'],
+},
+]
