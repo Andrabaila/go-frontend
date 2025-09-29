@@ -77,25 +77,26 @@ Players navigate a real-world map or virtual representation to explore, collect,
 
 ## 5. Modern Styling Approaches
 
-### 5.1 Global Styles (`global.css`)
+### 5.1 Base Document Styles (`index.css`)
 
-- Base layout (`.app`)
-- Reset / normalize (`* { margin: 0; padding: 0; }`)
-- Fonts (`body { font-family: ...; }`)
-- Global CSS variables (`--main-color: #3490dc;`)
+- Root typography (system font stack, line height, font smoothing)
+- Color scheme (light/dark mode via `prefers-color-scheme`)
+- Default link and button styles
+- Basic theme overrides (background and text colors)
 
-### 5.2 CSS Modules
+### 5.2 Global Styles (`global.css`)
 
-- Used for:
-  - Map containers (`MapComponent.module.css`, `App.module.css`)
-  - Large, complex UI components (e.g., `PlayerSidebar`)
-  - Custom animations and media queries
+- Modern reset (margin, padding, box-sizing)
+- Full-size root containers (`html, body, #root { height: 100%; width: 100%; }`)
+- Minimal baseline styles on top of Tailwind Preflight
+- No `.app` container (replaced by Tailwind utility classes directly in JSX)
 
 ### 5.3 Tailwind CSS
 
-- Buttons, badges, player cards, overlays
-- Rapid grid layouts and responsiveness (`flex`, `grid`, `md:w-1/2`)
-- Simple hover effects and transitions
+- Primary styling approach for layout and components
+- Utility classes for spacing, flex/grid layouts, responsiveness
+- Used for interactive elements (buttons, overlays, map layers)
+- Quick hover effects, transitions, and adaptive design
 
 ### 5.4 Inline Styles
 
