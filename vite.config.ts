@@ -18,6 +18,17 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './src/setupTests.ts',
-    exclude: [...configDefaults.exclude, 'e2e/*'], // пример, можно убрать
+    exclude: [...configDefaults.exclude, 'e2e/*'],
+    coverage: {
+      reporter: ['text', 'lcov'],
+      exclude: [
+        'src/types/**',
+        'src/constants/**',
+        'dist/**',
+        'src/vite-env.d.ts',
+        'eslint.config.js',
+        'vite.config.ts',
+      ],
+    },
   },
 });
