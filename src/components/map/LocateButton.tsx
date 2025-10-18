@@ -72,7 +72,7 @@ export default function LocateButton({ mapRef }: Props) {
   if (!shouldShow) return null;
 
   return createPortal(
-    <div className="fixed top-4 right-4 z-[9999] flex flex-col items-end gap-2">
+    <div className="fixed top-40 right-4 z-[9999] flex flex-col items-end gap-2">
       <button
         onClick={handleClick}
         disabled={loading}

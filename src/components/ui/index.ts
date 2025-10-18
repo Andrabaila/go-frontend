@@ -1,3 +1,4 @@
 // src/components/ui/index.ts
 
-export { default as Button } from './Button';
+export { default as FollowPlayerButton } from './FollowPlayerButton';
+export { default as ParkPopup } from './ParkPopup';
