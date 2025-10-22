@@ -2,19 +2,24 @@
 
 import '@/assets/styles/global.css';
 import 'leaflet/dist/leaflet.css';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { MapComponent } from '@/components';
-import ButtonLocate from './components/ui/ButtonLocate';
 import type { Map as LeafletMap } from 'leaflet';
+import BackpackButton from './components/ui/BackpackButton';
+import BackpackPopup from './components/player/BackpackPopup';
 
 function App() {
   const mapRef = useRef<LeafletMap | null>(null);
+  const [isBackpackOpen, setBackpackOpen] = useState(false);
 
   return (
     <div className="w-full h-screen relative">
-      {/* Прокидываем mapRef */}
+      <BackpackButton onClick={() => setBackpackOpen(true)} />
+      <BackpackPopup
+        isOpen={isBackpackOpen}
+        onClose={() => setBackpackOpen(false)}
+      />
       <MapComponent mapRef={mapRef} />
-      <ButtonLocate mapRef={mapRef} />
     </div>
   );
 }

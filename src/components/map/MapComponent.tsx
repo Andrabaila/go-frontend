@@ -32,6 +32,7 @@ export default function MapComponent({ mapRef }: Props) {
         setFilter={setFilter}
         followPlayer={followPlayer}
         setFollowPlayer={setFollowPlayer}
+        mapRef={mapRef}
       />
 
       <MapContainer

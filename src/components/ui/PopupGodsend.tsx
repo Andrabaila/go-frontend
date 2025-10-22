@@ -1,5 +1,6 @@
 import { CircleDollarSign } from 'lucide-react';
 import { useMap } from 'react-leaflet';
+import { addToBackpack } from '@/assets/data/backpackStorage';
 
 interface Props {
   id: string;
@@ -12,12 +13,14 @@ export default function PopupGodsend({ id, description, onTake }: Props) {
   const map = useMap();
 
   const handleLeave = () => {
-    map.closePopup(); // закрывает активный попап
+    map.closePopup();
   };
 
   const handleTake = () => {
+    // добавляем в рюкзак
+    addToBackpack({ id, name: description });
     onTake(id);
-    map.closePopup(); // закрываем попап после взятия
+    map.closePopup();
   };
 
   return (
