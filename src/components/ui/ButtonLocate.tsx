@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
-import { createPortal } from 'react-dom';
 import { LocateFixed } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import type { Map as LeafletMap } from 'leaflet';
 
 interface Props {
   mapRef: React.RefObject<LeafletMap | null>;
 }
 
-export default function LocateButton({ mapRef }: Props) {
+export default function ButtonLocate({ mapRef }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [shouldShow, setShouldShow] = useState(false);
@@ -15,16 +15,18 @@ export default function LocateButton({ mapRef }: Props) {
     null
   );
 
-  // Получаем текущую позицию пользователя при монтировании
+  // Получаем текущее положение при монтировании
   useEffect(() => {
     if (!navigator.geolocation) return;
+
     navigator.geolocation.getCurrentPosition(
       (pos) => setUserLocation([pos.coords.latitude, pos.coords.longitude]),
-      () => setError('⚠️ Unable to retrieve your location.')
+      () => setError('⚠️ Не удалось определить местоположение.'),
+      { enableHighAccuracy: false, maximumAge: 30000, timeout: 5000 }
     );
   }, []);
 
-  // Проверяем, насколько центр карты отличается от позиции пользователя
+  // Следим за движением карты и сравниваем с позицией пользователя
   useEffect(() => {
     if (!mapRef.current || !userLocation) return;
 
@@ -46,34 +48,46 @@ export default function LocateButton({ mapRef }: Props) {
 
   const handleClick = () => {
     if (!navigator.geolocation) {
-      setError('❌ Geolocation is not supported by your browser.');
+      setError('❌ Геолокация не поддерживается вашим браузером.');
       return;
     }
 
     setLoading(true);
     setError(null);
 
+    // ⚡️ моментальное перемещение к последней известной позиции
+    if (userLocation && mapRef.current) {
+      mapRef.current.setView(userLocation, 16);
+    }
+
+    // ⚙️ обновляем координаты с быстрым таймаутом
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const { latitude, longitude } = pos.coords;
+        const coords: [number, number] = [latitude, longitude];
+        setUserLocation(coords);
         if (mapRef.current) {
-          mapRef.current.setView([latitude, longitude], 16);
+          mapRef.current.setView(coords, 16);
         }
-        setUserLocation([latitude, longitude]);
         setLoading(false);
       },
       () => {
-        setError('⚠️ Unable to retrieve your location.');
+        setError('⚠️ Не удалось получить координаты.');
         setLoading(false);
+      },
+      {
+        enableHighAccuracy: false, // быстрее, использует Wi-Fi/IP
+        maximumAge: 30000, // можно брать из кеша до 30 сек
+        timeout: 5000, // ограничиваем ожидание 5 сек
       }
     );
   };
 
   if (!shouldShow) return null;
 
-  return createPortal(
-    <div className="fixed top-40 right-4 z-[9999] flex flex-col items-end gap-2">
-      <button
+  return (
+    <div className="absolute bottom-40 right-4 z-[1000] flex flex-col items-end gap-2">
+      <Button
         onClick={handleClick}
         disabled={loading}
         className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded shadow transition
@@ -86,16 +100,15 @@ export default function LocateButton({ mapRef }: Props) {
           className={loading ? 'animate-spin' : ''}
         />
         <span className="hidden sm:inline">
-          {loading ? 'Locating...' : 'My Location'}
+          {loading ? 'Определение...' : 'Моё местоположение'}
         </span>
-      </button>
+      </Button>
 
       {error && (
         <div className="bg-red-100 text-red-700 text-sm px-3 py-2 rounded shadow w-max">
           {error}
         </div>
       )}
-    </div>,
-    document.body
+    </div>
   );
 }

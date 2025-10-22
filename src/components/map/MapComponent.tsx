@@ -1,6 +1,8 @@
+// src/components/map/MapComponent.tsx
+
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
-import type { Map as LeafletMap, LatLngExpression } from 'leaflet';
+import type { Map as LeafletMap } from 'leaflet';
 
 import {
   ObjectLayer,
@@ -10,11 +12,18 @@ import {
 } from '@/components';
 import geoJsonData from '@/assets/data/osmData.json';
 import type { MapFeatureCollection } from '@/types';
+import CoinsLayer from './CoinsLayer';
 
 // --- Компонент, который следит за позицией игрока и при включении "следить" центрирует карту ---
-function PlayerMarker({ follow }: { follow: boolean }) {
+function PlayerMarker({
+  follow,
+  onPositionChange,
+}: {
+  follow: boolean;
+  onPositionChange: (pos: [number, number]) => void;
+}) {
   const map = useMap();
-  const [position, setPosition] = useState<LatLngExpression | null>(null);
+  const [position, setPosition] = useState<[number, number] | null>(null);
 
   useEffect(() => {
     if (!navigator.geolocation) return;
@@ -22,22 +31,20 @@ function PlayerMarker({ follow }: { follow: boolean }) {
     const watcher = navigator.geolocation.watchPosition(
       (pos) => {
         const { latitude, longitude } = pos.coords;
-        const newPos: LatLngExpression = [latitude, longitude];
+        const newPos: [number, number] = [latitude, longitude];
         setPosition(newPos);
+        onPositionChange(newPos);
 
-        if (follow) {
-          map.setView(newPos, map.getZoom());
-        }
+        if (follow) map.setView(newPos, map.getZoom());
       },
-      (err) => console.warn('Ошибка получения геопозиции:', err),
+      (err) => console.warn('Ошибка геопозиции:', err),
       { enableHighAccuracy: true }
     );
 
     return () => navigator.geolocation.clearWatch(watcher);
-  }, [follow, map]);
+  }, [follow, map, onPositionChange]);
 
   if (!position) return null;
-
   return <Marker position={position} />;
 }
 
@@ -57,6 +64,9 @@ export default function MapComponent({ mapRef }: Props) {
 
   const [filter, setFilter] = useState<string[]>(availableTypes);
   const [followPlayer, setFollowPlayer] = useState(true); // режим "следить"
+  const [playerPosition, setPlayerPosition] = useState<[number, number] | null>(
+    null
+  );
 
   const toggleType = (type: string) => {
     setFilter((prev) =>
@@ -101,7 +111,11 @@ export default function MapComponent({ mapRef }: Props) {
         <OsmParksLayer />
 
         {/* Маркер игрока + режим слежения */}
-        <PlayerMarker follow={followPlayer} />
+        <PlayerMarker
+          follow={followPlayer}
+          onPositionChange={setPlayerPosition}
+        />
+        <CoinsLayer playerPosition={playerPosition} />
       </MapContainer>
     </div>
   );

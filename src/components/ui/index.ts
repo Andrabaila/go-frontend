@@ -2,3 +2,4 @@
 
 export { default as FollowPlayerButton } from './FollowPlayerButton';
 export { default as ParkPopup } from './ParkPopup';
+export { Button } from './button';
