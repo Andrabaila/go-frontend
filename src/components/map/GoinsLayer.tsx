@@ -3,6 +3,7 @@ import PopupGodsend from '@/components/ui/PopupGodsend';
 import { useCoins } from '@/hooks/useCoins';
 import { coinIcon } from './utils/coinIcon';
 import { filterVisibleCoins } from './utils/filterVisibleCoins';
+import { PLAYER_VISIBLE_RADIUS } from '@/constants/map';
 
 interface Props {
   playerPosition: [number, number] | null;
@@ -10,7 +11,11 @@ interface Props {
 
 export default function CoinsLayer({ playerPosition }: Props) {
   const { coins, removeCoin } = useCoins();
-  const visibleCoins = filterVisibleCoins(coins, playerPosition);
+  const visibleCoins = filterVisibleCoins(
+    coins,
+    playerPosition,
+    PLAYER_VISIBLE_RADIUS
+  );
 
   return (
     <>

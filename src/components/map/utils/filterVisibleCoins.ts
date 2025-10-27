@@ -1,24 +1,15 @@
 import getDistanceMeters from '@/components/map/utils/getDistanceMeters';
-
-interface Coin {
-  id: string;
-  lat: number;
-  lng: number;
-  description: string;
-  image: string;
-  name: string;
-  weight: number;
-  value: number;
-}
+import { PLAYER_VISIBLE_RADIUS } from '@/constants/map';
+import type { MapGoin } from '@/types';
 
 export function filterVisibleCoins(
-  coins: Coin[],
+  goins: MapGoin[],
   playerPosition: [number, number] | null,
-  radius = 500
+  radius = PLAYER_VISIBLE_RADIUS
 ) {
   if (!playerPosition) return [];
-  return coins.filter((coin) => {
-    const distance = getDistanceMeters(playerPosition, [coin.lat, coin.lng]);
+  return goins.filter((goin) => {
+    const distance = getDistanceMeters(playerPosition, [goin.lat, goin.lng]);
     return distance <= radius;
   });
 }

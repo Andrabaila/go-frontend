@@ -1,11 +1,7 @@
 // src/components/map/utils/generateCoins.ts
 
-import type { Goin } from '@/types';
-
-export interface MapGoin extends Goin {
-  lat: number;
-  lng: number;
-}
+import { MAX_DISTANCE_FROM_BASE } from '@/constants/map';
+import type { MapGoin } from '@/types';
 
 /**
  * Генерация массива случайных "монет" в пределах радиуса ~1 км.
@@ -19,7 +15,7 @@ export function generateCoins(
   const coins: MapGoin[] = [];
 
   for (let i = 0; i < count; i++) {
-    const r = Math.random() * 1000; // радиус до 1 км
+    const r = Math.random() * MAX_DISTANCE_FROM_BASE;
     const angle = Math.random() * 2 * Math.PI;
 
     const dx = (r / 111320) * Math.cos(angle);

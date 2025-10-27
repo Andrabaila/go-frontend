@@ -1,6 +1,7 @@
 import { useMap } from 'react-leaflet';
 import { useEffect } from 'react';
 import L, { type LatLngTuple, Polygon } from 'leaflet';
+import { PLAYER_VISIBLE_RADIUS } from '@/constants/map';
 
 interface Props {
   position: LatLngTuple | null;
@@ -10,7 +11,7 @@ interface Props {
 
 export default function LightAroundPlayer({
   position,
-  radius = 100,
+  radius = PLAYER_VISIBLE_RADIUS,
   opacity = 0.7,
 }: Props) {
   const map = useMap();
