@@ -3,7 +3,7 @@ import { useState, useRef } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import type { Map as LeafletMap } from 'leaflet';
 
-import CoinsLayer from './CoinsLayer';
+import CoinsLayer from './GoinsLayer';
 import PlayerMarker from './PlayerMarker';
 import MapControls from './MapControls';
 import { usePlayerPosition } from '@/hooks/usePlayerPosition';

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { getBackpack } from '@/assets/data/backpackStorage';
-import type { BackpackItem } from '@/assets/data/backpackStorage';
+import { getBackpack, removeFromBackpack } from '@/assets/data/backpackStorage';
+import type { BackpackItem } from '@/types';
+import BackpackList from '@/components/player/BackpackList';
 
 interface Props {
   isOpen: boolean;
@@ -15,6 +16,14 @@ export default function BackpackPopup({ isOpen, onClose }: Props) {
       setItems(getBackpack());
     }
   }, [isOpen]);
+
+  const handleRemove = (name: string) => {
+    const confirmed = window.confirm(`Выбросить "${name}" из рюкзака?`);
+    if (confirmed) {
+      removeFromBackpack(name);
+      setItems(getBackpack());
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -47,17 +56,9 @@ export default function BackpackPopup({ isOpen, onClose }: Props) {
         }}
       >
         <h2 style={{ marginBottom: '12px' }}>Рюкзак</h2>
-        {items.length === 0 ? (
-          <p>Рюкзак пустой</p>
-        ) : (
-          <ul>
-            {items.map((item) => (
-              <li key={item.id} style={{ marginBottom: '8px' }}>
-                <strong>{item.name}</strong> x {item.quantity}
-              </li>
-            ))}
-          </ul>
-        )}
+
+        <BackpackList items={items} onRemove={handleRemove} />
+
         <button
           onClick={onClose}
           style={{

@@ -1,9 +1,4 @@
-export interface BackpackItem {
-  id: string;
-  name: string;
-  description?: string;
-  quantity: number;
-}
+import type { BackpackItem } from '@/types';
 
 const STORAGE_KEY = 'backpack';
 
@@ -14,16 +9,29 @@ export function getBackpack(): BackpackItem[] {
 
 export function addToBackpack(item: Omit<BackpackItem, 'quantity'>) {
   const backpack = getBackpack();
-  const existing = backpack.find((i) => i.id === item.id);
+
+  // ищем по имени, а не по id
+  const existing = backpack.find((i) => i.name === item.name);
+
   if (existing) {
     existing.quantity += 1;
   } else {
     backpack.push({ ...item, quantity: 1 });
   }
+
   localStorage.setItem(STORAGE_KEY, JSON.stringify(backpack));
 }
 
-export function removeFromBackpack(itemId: string) {
-  const backpack = getBackpack().filter((i) => i.id !== itemId);
+export function removeFromBackpack(itemName: string) {
+  const backpack = getBackpack()
+    .map((i) => {
+      if (i.name === itemName) {
+        // уменьшаем количество, если больше 1
+        return i.quantity > 1 ? { ...i, quantity: i.quantity - 1 } : null;
+      }
+      return i;
+    })
+    .filter(Boolean); // удаляем null, если вещь кончилась
+
   localStorage.setItem(STORAGE_KEY, JSON.stringify(backpack));
 }

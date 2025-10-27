@@ -1,5 +1,5 @@
 import { LatLng } from 'leaflet';
-import type { Coin } from './generateCoins';
+import type { Coin } from './generateGoins';
 import {
   BASE_COORDS,
   MAX_DISTANCE_FROM_BASE,

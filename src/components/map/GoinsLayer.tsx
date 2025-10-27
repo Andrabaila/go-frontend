@@ -14,14 +14,17 @@ export default function CoinsLayer({ playerPosition }: Props) {
 
   return (
     <>
-      {visibleCoins.map((coin) => (
-        <Marker key={coin.id} position={[coin.lat, coin.lng]} icon={coinIcon}>
+      {visibleCoins.map((goin) => (
+        <Marker key={goin.id} position={[goin.lat, goin.lng]} icon={coinIcon}>
           <Popup>
             <PopupGodsend
-              id={coin.id}
-              description={coin.description}
-              image={coin.image}
+              id={goin.id}
+              description={goin.description}
+              image={goin.image}
               onTake={removeCoin}
+              name={goin.name}
+              weight={goin.weight}
+              value={goin.value}
             />
           </Popup>
         </Marker>

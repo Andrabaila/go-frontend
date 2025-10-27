@@ -1,15 +1,19 @@
 import { CircleDollarSign } from 'lucide-react';
 import { useMap } from 'react-leaflet';
 import { addToBackpack } from '@/assets/data/backpackStorage';
+import type { BaseItem } from '@/types';
 
-interface Props {
-  id: string;
-  description: string;
-  image: string;
+interface Props extends BaseItem {
   onTake: (id: string) => void;
 }
 
-export default function PopupGodsend({ id, description, onTake }: Props) {
+export default function PopupGodsend({
+  id,
+  name,
+  weight,
+  value,
+  onTake,
+}: Props) {
   const map = useMap();
 
   const handleLeave = () => {
@@ -18,15 +22,23 @@ export default function PopupGodsend({ id, description, onTake }: Props) {
 
   const handleTake = () => {
     // добавляем в рюкзак
-    addToBackpack({ id, name: description });
+    addToBackpack({
+      id: id,
+      name: name,
+      type: 'backpackItem',
+      weight: weight,
+      value: value,
+    });
     onTake(id);
     map.closePopup();
   };
 
   return (
     <div className="flex flex-col items-center gap-2">
-      <CircleDollarSign />
-      <p className="text-sm text-center">{description}</p>
+      <p className="text-sm text-center">New godsend!</p>
+      <CircleDollarSign size={48} color="green" />
+      <p className="text-center font-bold">{name}</p>
+      <p className="text-sm">Вес: {weight}</p>
       <div className="flex gap-2 mt-2">
         <button
           onClick={handleTake}

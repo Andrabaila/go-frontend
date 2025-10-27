@@ -1,11 +1,10 @@
 // src/components/map/utils/generateCoins.ts
 
-export interface Coin {
-  id: string;
+import type { Goin } from '@/types';
+
+export interface MapGoin extends Goin {
   lat: number;
   lng: number;
-  description: string;
-  image: string;
 }
 
 /**
@@ -13,8 +12,11 @@ export interface Coin {
  * @param center - центральные координаты [lat, lng]
  * @param count - количество монет
  */
-export function generateCoins(center: [number, number], count: number): Coin[] {
-  const coins: Coin[] = [];
+export function generateCoins(
+  center: [number, number],
+  count: number
+): MapGoin[] {
+  const coins: MapGoin[] = [];
 
   for (let i = 0; i < count; i++) {
     const r = Math.random() * 1000; // радиус до 1 км
@@ -24,11 +26,14 @@ export function generateCoins(center: [number, number], count: number): Coin[] {
     const dy = (r / 111320) * Math.sin(angle);
 
     coins.push({
-      id: `coin-${i}`,
+      type: 'goin',
+      id: `goin-${i}`,
       lat: center[0] + dy,
       lng: center[1] + dx,
-      description: `Старинная монета #${i + 1}`,
+      name: `Goin`,
       image: '/icons/coin_popup.png',
+      weight: 1,
+      value: 1,
     });
   }
 
