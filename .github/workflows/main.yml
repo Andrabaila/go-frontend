@@ -12,6 +12,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
         node-version: [22.x]
@@ -20,7 +21,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
@@ -41,9 +42,8 @@ jobs:
       - name: Build project
         run: npm run build
 
-      # Загружаем сборку для деплоя
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+      - name: Upload build output for deployment
+        uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
 
@@ -51,6 +51,5 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      # Деплой на GitHub Pages
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v4
