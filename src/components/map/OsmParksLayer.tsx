@@ -199,7 +199,6 @@ export default function OsmParksLayer() {
     iconAnchor: [14, 28],
   });
 
-  // small overlay for status
   const overlayStyle: React.CSSProperties = {
     position: 'absolute',
     left: 10,
