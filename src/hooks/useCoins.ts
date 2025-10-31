@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
-import {
-  generateCoins,
-  type MapGoin,
-} from '@/components/map/utils/generateGoins';
+import { generateCoins } from '@/components/map/utils/generateGoins';
 import { BASE_COORDS, COINS_COUNT } from '@/constants/map';
+import type { MapGoin } from '@/types';
 
 export function useCoins() {
   const [coins, setCoins] = useState<MapGoin[]>([]);
