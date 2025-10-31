@@ -39,7 +39,7 @@ export default function PlayerPositionControl({ onChange }: Props) {
   return (
     <div
       style={{
-        marginTop: 250,
+        marginTop: 10,
         padding: 10,
         border: '1px solid #ccc',
         borderRadius: 6,

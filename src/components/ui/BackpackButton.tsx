@@ -6,19 +6,14 @@ export default function BackpackButton({ onClick }: Props) {
   return (
     <button
       onClick={onClick}
-      style={{
-        position: 'absolute',
-        top: 150,
-        left: 10,
-        zIndex: 1000,
-        padding: '8px 12px',
-        backgroundColor: '#4b5563',
-        color: 'white',
-        borderRadius: '6px',
-        border: 'none',
-        cursor: 'pointer',
-        fontWeight: 'bold',
-      }}
+      className="
+    absolute bottom-10 left-3 z-[1000]
+    px-3 py-2
+    bg-gray-600 text-white
+    rounded-md
+    font-bold
+    cursor-pointer
+    "
     >
       Рюкзак
     </button>

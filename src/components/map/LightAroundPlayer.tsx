@@ -1,11 +1,11 @@
 import { useMap } from 'react-leaflet';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import L, { type LatLngTuple, Polygon } from 'leaflet';
 import { PLAYER_VISIBLE_RADIUS } from '@/constants/map';
 
 interface Props {
   position: LatLngTuple | null;
-  radius?: number; // радиус светлой зоны в метрах
+  radius?: number;
   opacity?: number; // непрозрачность тьмы
 }
 
@@ -15,18 +15,25 @@ export default function LightAroundPlayer({
   opacity = 0.7,
 }: Props) {
   const map = useMap();
+  const visitedPointsRef = useRef<LatLngTuple[]>([]);
+  const maskRef = useRef<Polygon | null>(null);
 
   useEffect(() => {
     if (!map || !position) return;
 
-    // Удаляем старые маски
-    map.eachLayer((layer) => {
-      if ((layer as Polygon & { _isLightMask?: boolean })._isLightMask) {
-        map.removeLayer(layer);
-      }
-    });
+    // добавляем новую точку если её ещё нет
+    const last = visitedPointsRef.current[visitedPointsRef.current.length - 1];
+    if (!last || last[0] !== position[0] || last[1] !== position[1]) {
+      visitedPointsRef.current.push(position);
+    }
 
-    // Полигон "вся карта"
+    // удаляем старую маску
+    if (maskRef.current) {
+      map.removeLayer(maskRef.current);
+      maskRef.current = null;
+    }
+
+    // создаём полигон на всю карту
     const bounds = map.getBounds();
     const worldPolygon: LatLngTuple[] = [
       [bounds.getSouthWest().lat - 1, bounds.getSouthWest().lng - 1],
@@ -35,38 +42,31 @@ export default function LightAroundPlayer({
       [bounds.getNorthEast().lat + 1, bounds.getSouthWest().lng - 1],
     ];
 
-    // Создаём круг как массив точек (60 сегментов)
-    const circlePoints: LatLngTuple[] = [];
-    const numPoints = 60;
-    for (let i = 0; i < numPoints; i++) {
-      const angle = (i / numPoints) * 2 * Math.PI;
-      const dx = radius * Math.cos(angle);
-      const dy = radius * Math.sin(angle);
-
-      // Переводим смещение в координаты в градусах
-      const lat = position[0] + dy / 111320;
-      const lng =
-        position[1] + dx / (111320 * Math.cos((position[0] * Math.PI) / 180));
-      circlePoints.push([lat, lng]);
-    }
-
-    // Создаём полигон с дыркой (внутри круга)
-    const mask: Polygon & { _isLightMask?: boolean } = L.polygon(
-      [worldPolygon, circlePoints.reverse()],
-      {
-        color: 'black',
-        fillColor: 'black',
-        fillOpacity: opacity,
-        stroke: false,
+    // создаём «дырки» для всех посещённых точек
+    const holes = visitedPointsRef.current.map((pos) => {
+      const points: LatLngTuple[] = [];
+      const numPoints = 30;
+      for (let i = 0; i < numPoints; i++) {
+        const angle = (i / numPoints) * 2 * Math.PI;
+        const dx = radius * Math.cos(angle);
+        const dy = radius * Math.sin(angle);
+        const lat = pos[0] + dy / 111320;
+        const lng = pos[1] + dx / (111320 * Math.cos((pos[0] * Math.PI) / 180));
+        points.push([lat, lng]);
       }
-    );
+      return points; // важно для корректного «вычитания»
+    });
 
-    mask._isLightMask = true;
+    // создаём полигон-маску с дырками
+    const mask = L.polygon([worldPolygon, ...holes], {
+      color: 'black',
+      fillColor: 'grey',
+      fillOpacity: opacity,
+      stroke: false,
+    });
+
     mask.addTo(map);
-
-    return () => {
-      map.removeLayer(mask);
-    };
+    maskRef.current = mask;
   }, [map, position, radius, opacity]);
 
   return null;

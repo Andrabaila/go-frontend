@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { LocateFixed } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import type { Map as LeafletMap } from 'leaflet';
 
 interface Props {
@@ -86,12 +85,15 @@ export default function ButtonLocate({ mapRef }: Props) {
   if (!shouldShow) return null;
 
   return (
-    <div className="absolute bottom-40 right-4 z-[1000] flex flex-col items-end gap-2">
-      <Button
+    <div className="absolute bottom-10 right-4 z-[1000] flex flex-col items-end gap-2">
+      <button
         onClick={handleClick}
         disabled={loading}
-        className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded shadow transition
-          ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'}
+        className={`flex items-center gap-2 px-3 sm:px-3 py-2
+      rounded-md
+      font-bold
+      cursor-pointer shadow transition
+          ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-gray-600 hover:bg-gray-700'}
           text-white`}
       >
         <LocateFixed
@@ -102,7 +104,7 @@ export default function ButtonLocate({ mapRef }: Props) {
         <span className="hidden sm:inline">
           {loading ? 'Определение...' : 'Моё местоположение'}
         </span>
-      </Button>
+      </button>
 
       {error && (
         <div className="bg-red-100 text-red-700 text-sm px-3 py-2 rounded shadow w-max">

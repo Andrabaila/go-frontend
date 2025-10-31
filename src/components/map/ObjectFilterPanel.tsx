@@ -6,25 +6,13 @@ interface ObjectFilterPanelProps {
   onToggle: (type: string) => void;
 }
 
-// Константа со стилем панели фильтров
-const PANEL_STYLE: React.CSSProperties = {
-  position: 'absolute',
-  top: 10,
-  left: 70, // отступ, чтобы не перекрывать контролы зума Leaflet
-  zIndex: 1000,
-  background: 'gray',
-  padding: 10,
-  borderRadius: 8,
-  boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
-};
-
 export default function ObjectFilterPanel({
   availableTypes,
   selectedTypes,
   onToggle,
 }: ObjectFilterPanelProps) {
   return (
-    <div style={PANEL_STYLE}>
+    <div className="absolute top-10 left-[70px] z-[2000] bg-gray-500 p-5 rounded-lg shadow-md">
       {availableTypes.map((type) => (
         <div key={type}>
           <label>

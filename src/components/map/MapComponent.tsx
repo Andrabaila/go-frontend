@@ -5,9 +5,7 @@ import type { Map as LeafletMap } from 'leaflet';
 import CoinsLayer from './GoinsLayer';
 import PlayerMarker from './PlayerMarker';
 import MapControls from './MapControls';
-import { ObjectLayer, OsmParksLayer } from '@/components';
-import geoJsonData from '@/assets/data/osmData.json';
-import type { MapFeatureCollection } from '@/types';
+
 import LightAroundPlayer from './LightAroundPlayer';
 import PlayerPositionControl from '../ui/PlayerPositionControl';
 
@@ -38,7 +36,9 @@ export default function MapComponent({ mapRef }: Props) {
       />
 
       {/* Панель ручного управления игроком */}
-      <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 3000 }}>
+      <div
+        style={{ position: 'absolute', bottom: 100, left: 10, zIndex: 3000 }}
+      >
         <PlayerPositionControl onChange={setPlayerPosition} />
       </div>
 
@@ -51,17 +51,7 @@ export default function MapComponent({ mapRef }: Props) {
           internalMapRef.current = mapInstance;
         }}
       >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/">OSM</a>'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-
         {/* Слои объектов */}
-        <ObjectLayer
-          data={geoJsonData as MapFeatureCollection}
-          filterTypes={filter}
-        />
-        <OsmParksLayer />
 
         {/* Маркер игрока */}
         <PlayerMarker position={playerPosition} follow={followPlayer} />
@@ -70,6 +60,7 @@ export default function MapComponent({ mapRef }: Props) {
 
         {/* Монеты */}
         <CoinsLayer playerPosition={playerPosition} />
+        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       </MapContainer>
     </div>
   );
