@@ -1,4 +1,3 @@
-// utils/distanceStorage.ts
 import L from 'leaflet';
 
 // Ключ в localStorage

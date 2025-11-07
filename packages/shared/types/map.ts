@@ -1,5 +1,3 @@
-// src/types/map.ts
-
 import type { FeatureCollection, Geometry } from 'geojson';
 import type { Goin } from './game';
 

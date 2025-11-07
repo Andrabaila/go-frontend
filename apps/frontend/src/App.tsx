@@ -1,5 +1,3 @@
-// src/App.tsx
-
 import '@/assets/styles/global.css';
 import 'leaflet/dist/leaflet.css';
 import { useRef, useState } from 'react';

@@ -1,4 +1,3 @@
-// src/utils/createMap.test.ts
 import { describe, it, expect, vi } from 'vitest';
 import leaflet from 'leaflet';
 import createMap from './createMap';

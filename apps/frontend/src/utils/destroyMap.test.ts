@@ -1,4 +1,3 @@
-// src/utils/destroyMap.test.ts
 import { describe, it, expect, vi } from 'vitest';
 import { Map } from 'leaflet';
 import destroyMap from './destroyMap';

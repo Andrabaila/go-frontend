@@ -1,6 +1,3 @@
-// src/types/ui.ts
-// 💻 Типы для интерфейсных компонентов
-
 export interface ButtonProps {
   label: string;
   onClick: () => void;

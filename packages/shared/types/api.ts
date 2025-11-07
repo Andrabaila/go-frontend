@@ -1,6 +1,3 @@
-// src/types/api.ts
-// 🔗 Типы для работы с API
-
 export interface ApiResponse<T> {
   success: boolean;
   data: T;

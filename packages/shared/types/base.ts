@@ -1,6 +1,3 @@
-// src/types/base.ts
-
-// Основные типы данных приложения
 export interface Coordinates {
   lat: number;
   lng: number;

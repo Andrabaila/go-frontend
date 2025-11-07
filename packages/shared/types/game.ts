@@ -1,5 +1,3 @@
-// src/types/game.ts
-
 export type Item = BaseItem | Goin | BackpackItem | Artefact;
 
 export interface BaseItem {

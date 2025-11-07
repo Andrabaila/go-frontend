@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { usePlayerPosition } from '@/hooks/usePlayerPosition';
 
 interface Props {
@@ -14,19 +14,22 @@ export default function PlayerPositionControl({ onChange }: Props) {
   // Получаем реальные геоданные через хук
   const gpsPosition = usePlayerPosition(useGPS, () => {});
 
+  // Делаем onChange стабильным для useEffect
+  const stableOnChange = useCallback(onChange, [onChange]);
+
   // Когда GPS включен, синхронизируем с внешним положением
   useEffect(() => {
     if (useGPS && gpsPosition) {
-      onChange(gpsPosition);
+      stableOnChange(gpsPosition);
     }
-  }, [gpsPosition, useGPS]);
+  }, [gpsPosition, useGPS, stableOnChange]);
 
   // Когда ручной режим — синхронизируем manualPosition
   useEffect(() => {
     if (!useGPS) {
-      onChange(manualPosition);
+      stableOnChange(manualPosition);
     }
-  }, [manualPosition, useGPS]);
+  }, [manualPosition, useGPS, stableOnChange]);
 
   const changeLatitude = (delta: number) => {
     setManualPosition(([lat, lng]) => [lat + delta, lng]);
@@ -42,7 +45,7 @@ export default function PlayerPositionControl({ onChange }: Props) {
         marginTop: 10,
         padding: 10,
         border: '1px solid #ccc',
-        borderRadius: 6,
+        borderRadius: 5,
         width: 220,
       }}
     >

@@ -1,4 +1,3 @@
-// src/utils/addTileLayer.test.ts
 import { describe, it, expect, vi } from 'vitest';
 import type { Mock } from 'vitest';
 import leaflet, { Map } from 'leaflet';

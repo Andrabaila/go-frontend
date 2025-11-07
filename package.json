@@ -1,12 +1,18 @@
 {
   "name": "monorepo",
   "private": true,
-  "workspaces": ["apps/*", "packages/*"],
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "devDependencies": {
-    "turbo": "latest",
-    "rimraf": "^6.0.1",
+    "@typescript-eslint/eslint-plugin": "^8.46.3",
+    "@typescript-eslint/parser": "^8.46.3",
+    "eslint": "^9.36.0",
     "prettier": "^3.6.2",
-    "eslint": "^9.36.0"
+    "rimraf": "^6.0.1",
+    "turbo": "latest"
   },
   "scripts": {
     "dev": "turbo run dev --parallel",
