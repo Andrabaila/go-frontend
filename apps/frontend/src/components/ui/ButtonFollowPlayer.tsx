@@ -1,5 +1,3 @@
-// src/components/ui/ButtonFollowPlayer.tsx
-
 interface Props {
   follow: boolean;
   onToggle: () => void;

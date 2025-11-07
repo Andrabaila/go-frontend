@@ -1,5 +1,3 @@
-// src/components/map/ObjectFilterPanel.test.ts
-
 import { render, screen, fireEvent } from '@testing-library/react';
 import ObjectFilterPanel from './ObjectFilterPanel';
 

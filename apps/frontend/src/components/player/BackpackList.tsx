@@ -1,4 +1,4 @@
-import type { BackpackItem } from '@/types';
+import type { BackpackItem } from '@shared/types';
 import BackpackItemRow from '@/components/player/BackpackItemRow';
 
 interface Props {

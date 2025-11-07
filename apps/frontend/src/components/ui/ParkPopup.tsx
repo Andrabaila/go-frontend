@@ -1,5 +1,3 @@
-// src/components/ui/ParkPopup.tsx
-
 import type { FC } from 'react';
 // local Park type because "@/components" doesn't export Park
 type Park = {

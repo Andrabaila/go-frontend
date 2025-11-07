@@ -1,4 +1,4 @@
-import type { BackpackItem } from '@/types';
+import type { BackpackItem } from '@shared/types';
 import { Trash2 } from 'lucide-react';
 
 interface Props {

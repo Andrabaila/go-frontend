@@ -1,6 +1,6 @@
 import getDistanceMeters from '@/components/map/utils/getDistanceMeters';
 import { PLAYER_VISIBLE_RADIUS } from '@/constants/map';
-import type { MapGoin } from '@/types';
+import type { MapGoin } from '@shared/types';
 
 export function filterVisibleCoins(
   goins: MapGoin[],

@@ -1,4 +1,3 @@
-// src/hooks/usePlayerPosition.ts
 import { useState, useEffect } from 'react';
 
 export function usePlayerPosition(

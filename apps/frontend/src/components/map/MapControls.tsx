@@ -1,8 +1,7 @@
-// src/components/map/MapControls.tsx
 import { useMemo } from 'react';
 import { ObjectFilterPanel, ButtonFollowPlayer } from '@/components';
 import ButtonLocate from '@/components/ui/ButtonLocate';
-import type { MapFeatureCollection } from '@/types';
+import type { MapFeatureCollection } from '@shared/types';
 import geoJsonData from '@/assets/data/osmData.json';
 import type { Map as LeafletMap } from 'leaflet';
 

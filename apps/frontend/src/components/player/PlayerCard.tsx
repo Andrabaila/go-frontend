@@ -1,4 +1,3 @@
-// src/components/player/PlayerCard.tsx
 // 📘 Заглушечный UI-компонент
 
 interface PlaceholderProps {

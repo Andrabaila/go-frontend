@@ -1,5 +1,5 @@
 import { GeoJSON } from 'react-leaflet';
-import type { MapFeatureCollection } from '@/types';
+import type { MapFeatureCollection } from '@shared/types';
 
 interface Props {
   data: MapFeatureCollection;

@@ -1,7 +1,7 @@
 import { CircleDollarSign } from 'lucide-react';
 import { useMap } from 'react-leaflet';
 import { addToBackpack } from '@/assets/data/backpackStorage';
-import type { BaseItem } from '@/types';
+import type { BaseItem } from '@shared/types';
 
 interface Props extends BaseItem {
   onTake: (id: string) => void;

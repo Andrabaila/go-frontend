@@ -1,8 +1,7 @@
-// src/components/map/ObjectLayer.test.tsx
 import { render } from '@testing-library/react';
 import { GeoJSON } from 'react-leaflet';
 import ObjectLayer from './ObjectLayer';
-import type { MapFeatureCollection } from '@/types';
+import type { MapFeatureCollection } from '@shared/types';
 import { vi, type Mock } from 'vitest';
 
 // Mock the GeoJSON component to avoid Leaflet dependency in tests

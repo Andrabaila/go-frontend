@@ -1,4 +1,3 @@
-// src/components/OsmParksLayer.tsx
 import { useEffect, useState } from 'react';
 import { Marker, useMap, Popup } from 'react-leaflet';
 import L, { LatLngBounds } from 'leaflet';

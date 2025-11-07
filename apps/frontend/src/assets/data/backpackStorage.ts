@@ -1,4 +1,4 @@
-import type { BackpackItem } from '@/types';
+import type { BackpackItem } from '@shared/types';
 
 const STORAGE_KEY = 'backpack';
 

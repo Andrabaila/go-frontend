@@ -1,5 +1,3 @@
-// src/components/map/ObjectFilterPanel.tsx
-
 interface ObjectFilterPanelProps {
   availableTypes: string[];
   selectedTypes: string[];
