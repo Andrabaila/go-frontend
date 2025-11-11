@@ -12,33 +12,21 @@ const __dirname = path.dirname(__filename);
 
 const backendRoot = path.join(__dirname, 'apps/backend');
 const frontendRoot = path.join(__dirname, 'apps/frontend');
-const packagesRoot = path.join(__dirname, 'packages/shared');
+const sharedRoot = path.join(__dirname, 'packages/shared');
 
 export default [
   {
-    ignores: ['**/dist', '**/node_modules', '**/coverage'],
+    ignores: ['**/dist', '**/node_modules', '**/coverage', '**/*.d.ts'],
   },
 
   js.configs.recommended,
   ...tseslint.configs.recommended,
 
   {
-    languageOptions: {
-      globals: globals.browser,
-    },
     plugins: {
       prettier: prettierPlugin,
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
     },
     rules: {
-      'no-restricted-imports': ['error', { patterns: ['@/types/*'] }],
-      'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
       'prettier/prettier': 'error',
     },
   },
@@ -51,6 +39,9 @@ export default [
         tsconfigRootDir: backendRoot,
       },
     },
+    rules: {
+      'no-restricted-imports': ['error', { patterns: ['@/types/*'] }],
+    },
   },
 
   {
@@ -60,15 +51,35 @@ export default [
         project: [path.join(frontendRoot, 'tsconfig.json')],
         tsconfigRootDir: frontendRoot,
       },
+      globals: globals.browser,
+    },
+    plugins: {
+      'react-hooks': reactHooks,
+      'react-refresh': reactRefresh,
+      prettier: prettierPlugin,
+    },
+    rules: {
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true },
+      ],
+      'no-restricted-imports': ['error', { patterns: ['@/types/*'] }],
+      'prettier/prettier': 'error',
     },
   },
+
   {
-    files: ['packages/shared/**/*.{ts,tsx,js,jsx}'],
+    files: ['packages/shared/**/*.ts'],
     languageOptions: {
       parserOptions: {
-        project: [path.join(packagesRoot, 'tsconfig.json')],
-        tsconfigRootDir: packagesRoot,
+        project: [path.join(sharedRoot, 'tsconfig.json')],
+        tsconfigRootDir: sharedRoot,
       },
+    },
+    rules: {
+      'prettier/prettier': 'error',
     },
   },
 ];
