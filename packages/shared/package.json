@@ -2,6 +2,7 @@
   "name": "@go/shared",
   "version": "0.0.1",
   "private": true,
+  "description": "Shared TypeScript types and utilities for go project.",
   "license": "LICENSED",
   "author": "Yury Andrabaila",
   "type": "module",

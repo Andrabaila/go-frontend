@@ -2,7 +2,7 @@
   "name": "go-backend",
   "version": "0.0.1",
   "private": true,
-  "description": "",
+  "description": "Backend API for go project built with NestJS.",
   "license": "LICENSED",
   "author": "Yury Andrabaila",
   "type": "module",
