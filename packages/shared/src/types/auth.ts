@@ -7,6 +7,7 @@ export interface LoginRequest {
   password: string;
 }
 
-export interface RegisterRequest extends LoginRequest {
-  captchaToken: string;
+export interface RegisterRequest {
+  email: string;
+  password: string;
 }
