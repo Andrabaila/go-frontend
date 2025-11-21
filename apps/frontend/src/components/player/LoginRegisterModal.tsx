@@ -7,7 +7,7 @@ type Mode = 'login' | 'register';
 interface LoginRegisterModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onLoginSuccess?: () => void;
+  onLoginSuccess?: (email: string) => void;
 }
 
 // Тип ошибки с сервера
@@ -39,11 +39,11 @@ export const LoginRegisterModal = ({
       if (mode === 'login') {
         const data: LoginRequest = { email, password };
         await loginUser(data);
-        onLoginSuccess?.();
+        onLoginSuccess?.(email);
       } else {
         const data: RegisterRequest = { email, password };
         await registerUser(data);
-        setMode('login'); // После регистрации переключаем на логин
+        onLoginSuccess?.(email);
       }
       setEmail('');
       setPassword('');

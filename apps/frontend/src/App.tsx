@@ -13,6 +13,7 @@ function App() {
   const mapRef = useRef<LeafletMap | null>(null);
   const [isBackpackOpen, setBackpackOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
 
   return (
     <div className="w-full h-screen relative">
@@ -22,11 +23,17 @@ function App() {
         onClose={() => setBackpackOpen(false)}
       />
       <StatusBar />
-      <LoginRegisterButton onClick={() => setModalOpen(true)} />
+      <LoginRegisterButton
+        onClick={() => setModalOpen(true)}
+        userEmail={userEmail}
+      />
       <LoginRegisterModal
         isOpen={isModalOpen}
         onClose={() => setModalOpen(false)}
-        onLoginSuccess={() => setModalOpen(false)}
+        onLoginSuccess={(email) => {
+          setUserEmail(email); // ← сохраняем email
+          setModalOpen(false); // ← закрываем модалку
+        }}
       />
       <MapComponent mapRef={mapRef} />
     </div>
