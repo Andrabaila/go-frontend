@@ -1,13 +1,15 @@
 import '@/assets/styles/global.css';
 import 'leaflet/dist/leaflet.css';
 import { useRef, useState } from 'react';
-import { MapComponent } from '@/components';
 import type { Map as LeafletMap } from 'leaflet';
-import BackpackButton from './components/ui/BackpackButton';
-import BackpackPopup from './components/player/BackpackPopup';
-import StatusBar from './components/player/StatusBar';
-import { LoginRegisterModal } from './components/player/LoginRegisterModal';
-import LoginRegisterButton from './components/ui/LoginRegisterButton';
+import {
+  MapComponent,
+  StatusBar,
+  BackpackPopup,
+  LoginRegisterModal,
+  LoginRegisterButton,
+  BackpackButton,
+} from '@/components';
 
 function App() {
   const mapRef = useRef<LeafletMap | null>(null);

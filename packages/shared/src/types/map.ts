@@ -14,3 +14,6 @@ export interface MapGoin extends Goin {
   lat: number;
   lng: number;
 }
+
+export type TileStatus = 'discovered' | 'visited' | 'fully_explored';
+export type TileKey = `${number}_${number}`;

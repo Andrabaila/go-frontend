@@ -2,3 +2,8 @@ export { default as MapComponent } from './MapComponent';
 export { default as ObjectFilterPanel } from './ObjectFilterPanel';
 export { default as ObjectLayer } from './ObjectLayer';
 export { default as OsmParksLayer } from './OsmParksLayer';
+export { default as GoinsLayer } from './GoinsLayer';
+export { default as LightAroundPlayer } from './LightAroundPlayer';
+export { default as MapControls } from './MapControls';
+export { default as PlayerMarker } from './PlayerMarker';
+export { TileLayer as TileLayer } from './TileLayer';

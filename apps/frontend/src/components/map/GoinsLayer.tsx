@@ -9,7 +9,7 @@ interface Props {
   playerPosition: [number, number] | null;
 }
 
-export default function CoinsLayer({ playerPosition }: Props) {
+export default function GoinsLayer({ playerPosition }: Props) {
   const { coins, removeCoin } = useCoins();
   const visibleCoins = filterVisibleCoins(
     coins,

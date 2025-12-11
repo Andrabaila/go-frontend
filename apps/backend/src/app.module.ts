@@ -8,6 +8,7 @@ import { Player } from './players/player.entity.js';
 import { AuthModule } from './auth/auth.module.js';
 import { UsersModule } from './users/users.module.js';
 import { User } from './users/user.entity.js';
+import { TileModule } from './tiles/tile.module.js';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { User } from './users/user.entity.js';
     GameObjectsModule,
     AuthModule,
     UsersModule,
+    TileModule,
   ],
   controllers: [AppController], // <── UsersController УБРАТЬ
   providers: [AppService], // <── UsersService УБРАТЬ
