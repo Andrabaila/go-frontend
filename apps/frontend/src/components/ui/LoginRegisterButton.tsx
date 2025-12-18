@@ -1,9 +1,16 @@
 interface Props {
   onClick: () => void;
   userEmail: string | null;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-export default function LoginRegisterButton({ onClick, userEmail }: Props) {
+export default function LoginRegisterButton({
+  onClick,
+  userEmail,
+  isOpen,
+}: Props) {
+  if (!isOpen) return null;
   return (
     <button
       onClick={onClick}

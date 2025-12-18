@@ -11,6 +11,8 @@ interface Props {
   followPlayer: boolean;
   setFollowPlayer: React.Dispatch<React.SetStateAction<boolean>>;
   mapRef: React.RefObject<LeafletMap | null>;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 export default function MapControls({
@@ -19,6 +21,7 @@ export default function MapControls({
   followPlayer,
   setFollowPlayer,
   mapRef,
+  isOpen,
 }: Props) {
   const availableTypes = useMemo(() => {
     const types = new Set<string>();
@@ -33,6 +36,8 @@ export default function MapControls({
       prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
     );
   };
+
+  if (!isOpen) return null;
 
   return (
     <>

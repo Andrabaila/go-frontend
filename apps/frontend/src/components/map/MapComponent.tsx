@@ -1,38 +1,28 @@
 import { useState, useRef } from 'react';
-import {
-  MapContainer,
-  TileLayer,
-  Rectangle,
-  useMapEvents,
-} from 'react-leaflet';
+import { MapContainer, TileLayer } from 'react-leaflet';
 import type { Map as LeafletMap } from 'leaflet';
 
-import {
-  GoinsLayer,
-  PlayerMarker,
-  MapControls,
-  PlayerPositionControl,
-} from '@/components';
+import { GoinsLayer, PlayerMarker, PlayerPositionControl } from '@/components';
 
-import { latLngToGlobalTile, tileToBounds } from '@/utils';
-import type { TileStatus } from '@shared/types';
+/* import { latLngToGlobalTile, tileToBounds } from '@/utils';
+import type { TileStatus } from '@shared/types'; */
 
-import { useTileGridSync } from '@/hooks';
+//import { useTileGridSync } from '@/hooks';
 
 interface Props {
   mapRef: React.RefObject<LeafletMap | null>;
 }
 
 /* Цвета тайлов по статусу */
-const TILE_COLORS: Record<TileStatus, string> = {
+/* const TILE_COLORS: Record<TileStatus, string> = {
   discovered: 'rgba(0, 140, 255, 0.15)',
   visited: 'rgba(0, 255, 100, 0.25)',
   fully_explored: 'rgba(255, 200, 0, 0.25)',
-};
+}; */
 
 /* ------------------------------
    Автопометка тайлов вокруг игрока
---------------------------------*/
+
 function PlayerTileUpdater({
   playerPosition,
   markTile,
@@ -61,12 +51,11 @@ function PlayerTileUpdater({
   return null;
 }
 
-/* ------------------------------
+
    Основной компонент
 --------------------------------*/
 export default function MapComponent({ mapRef }: Props) {
-  const [filter, setFilter] = useState<string[]>([]);
-  const [followPlayer, setFollowPlayer] = useState(true);
+  const [followPlayer] = useState(true);
   const [playerPosition, setPlayerPosition] = useState<[number, number] | null>(
     [52.1506, 21.0336]
   );
@@ -75,14 +64,13 @@ export default function MapComponent({ mapRef }: Props) {
 
   /* ------------------------------
      Подключаем новый hook синхронизации
-  --------------------------------*/
+
   const { tiles, markTile, fetchTilesInBBox } = useTileGridSync(
     internalMapRef.current
   );
 
-  /* ------------------------------
      Загрузка тайлов по BBOX
-  --------------------------------*/
+
   function BoundsWatcher() {
     let timer: number | null = null;
 
@@ -102,9 +90,8 @@ export default function MapComponent({ mapRef }: Props) {
     return null;
   }
 
-  /* ------------------------------
      Отрисовка тайлов
-  --------------------------------*/
+
   const renderTileRects = () =>
     Object.entries(tiles).map(([key, status]) => {
       const [x, y] = key.split('_').map(Number);
@@ -126,19 +113,11 @@ export default function MapComponent({ mapRef }: Props) {
         />
       );
     });
-
+  --------------------------------*/
   const defaultCenter = playerPosition ?? [52.1506, 21.0336];
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '100vh' }}>
-      <MapControls
-        filter={filter}
-        setFilter={setFilter}
-        followPlayer={followPlayer}
-        setFollowPlayer={setFollowPlayer}
-        mapRef={mapRef}
-      />
-
       <div
         style={{ position: 'absolute', bottom: 100, left: 10, zIndex: 3000 }}
       >
@@ -154,19 +133,9 @@ export default function MapComponent({ mapRef }: Props) {
           internalMapRef.current = mapInstance;
         }}
       >
-        <BoundsWatcher />
-
-        <PlayerTileUpdater
-          playerPosition={playerPosition}
-          markTile={markTile}
-        />
-
         <PlayerMarker position={playerPosition} follow={followPlayer} />
-
         <GoinsLayer playerPosition={playerPosition} />
-
-        {renderTileRects()}
-
+        {/*         {renderTileRects()} */}
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       </MapContainer>
     </div>

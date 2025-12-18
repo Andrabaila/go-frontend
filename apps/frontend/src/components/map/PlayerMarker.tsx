@@ -38,27 +38,50 @@ export default function PlayerMarker({ position, follow }: Props) {
   }, [position, follow, map]);
 
   // Обновляем статус при изменении позиции
+  const MIN_MOVE_METERS = 5; // игнорируем мелкие сдвиги
+  const MIN_UPDATE_MS = 1000; // не чаще 1 раза в секунду
+
+  const lastUpdateTs = useRef(0);
+
   useEffect(() => {
-    if (position && Array.isArray(position)) {
-      const prev = prevPosition.current;
+    if (!position) return;
 
-      if (prev) {
-        const deltaDistance = L.latLng(prev).distanceTo(L.latLng(position)); // м
+    const current = L.latLng(position);
+    const prev = prevPosition.current ? L.latLng(prevPosition.current) : null;
 
-        // --- обновляем статус через useLocalStorage ---
-        setStatus((prevStatus) => ({
-          ...prevStatus,
-          distance: prevStatus.distance + deltaDistance,
-          exploredArea: updateExploredArea(
-            prev,
-            position,
-            PLAYER_VISIBLE_RADIUS
-          ),
-        }));
-      }
-
-      prevPosition.current = position;
+    if (!prev) {
+      prevPosition.current = [current.lat, current.lng];
+      return;
     }
+
+    const now = Date.now();
+    const deltaDistance = prev.distanceTo(current);
+
+    // 1️⃣ игнорируем микродвижения
+    if (deltaDistance < MIN_MOVE_METERS) {
+      return;
+    }
+
+    // 2️⃣ throttling по времени
+    if (now - lastUpdateTs.current < MIN_UPDATE_MS) {
+      return;
+    }
+
+    lastUpdateTs.current = now;
+
+    setStatus((prevStatus) => ({
+      ...prevStatus,
+      distance: prevStatus.distance + deltaDistance,
+      exploredArea:
+        prevStatus.exploredArea +
+        updateExploredArea(
+          [prev.lat, prev.lng],
+          [current.lat, current.lng],
+          PLAYER_VISIBLE_RADIUS
+        ),
+    }));
+
+    prevPosition.current = [current.lat, current.lng];
   }, [position, setStatus]);
 
   if (!position) return null;
