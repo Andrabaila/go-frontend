@@ -8,6 +8,12 @@ interface Props {
   onClose: () => void;
 }
 
+/**
+ * Нижний sheet для отображения инвентаря игрока.
+ * Загружает предметы из localStorage при открытии.
+ * @param isOpen - Флаг видимости sheet
+ * @param onClose - Функция закрытия sheet
+ */
 export default function BackpackBottomSheet({ isOpen, onClose }: Props) {
   const [items, setItems] = useState<BackpackItem[]>([]);
 

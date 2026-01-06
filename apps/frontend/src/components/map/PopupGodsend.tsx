@@ -35,20 +35,20 @@ export default function PopupGodsend({
 
   return (
     <div className="flex flex-col items-center gap-2">
-      <p className="text-sm text-center">New godsend!</p>
+      <p className="text-center text-sm">New godsend!</p>
       <CircleDollarSign size={48} color="green" />
       <p className="text-center font-bold">{name}</p>
       <p className="text-sm">Вес: {weight}</p>
-      <div className="flex gap-2 mt-2">
+      <div className="mt-2 flex gap-2">
         <button
           onClick={handleTake}
-          className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
+          className="rounded bg-green-600 px-3 py-1 text-white hover:bg-green-700"
         >
           Взять
         </button>
         <button
           onClick={handleLeave}
-          className="px-3 py-1 bg-gray-300 text-white rounded hover:bg-gray-400"
+          className="rounded bg-gray-300 px-3 py-1 text-white hover:bg-gray-400"
         >
           Оставить
         </button>

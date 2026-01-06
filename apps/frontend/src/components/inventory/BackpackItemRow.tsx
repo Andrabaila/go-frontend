@@ -24,7 +24,7 @@ export default function BackpackItemRow({ item, onRemove }: Props) {
       <span title="Выбросить предмет">
         <Trash2
           size={18}
-          className="text-red-600 cursor-pointer hover:text-red-800"
+          className="cursor-pointer text-red-600 hover:text-red-800"
           onClick={() => onRemove(item.name)}
         />
       </span>

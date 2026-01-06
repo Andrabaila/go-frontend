@@ -10,7 +10,7 @@ export default function ObjectFilterPanel({
   onToggle,
 }: ObjectFilterPanelProps) {
   return (
-    <div className="absolute top-10 left-[70px] z-[2000] bg-gray-500 p-5 rounded-lg shadow-md">
+    <div className="absolute left-[70px] top-10 z-[2000] rounded-lg bg-gray-500 p-5 shadow-md">
       {availableTypes.map((type) => (
         <div key={type}>
           <label>

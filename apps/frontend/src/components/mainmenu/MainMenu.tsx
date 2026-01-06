@@ -8,6 +8,15 @@ interface MainMenuProps {
   onProfile: () => void;
 }
 
+/**
+ * Главное меню навигации с кнопками для разделов.
+ * Управляет активным состоянием меню для переключения панелей.
+ * @param activeMenu - Текущий активный раздел меню
+ * @param onMapSettings - Обработчик открытия настроек карты
+ * @param onQuests - Обработчик открытия квестов
+ * @param onInventory - Обработчик открытия инвентаря
+ * @param onProfile - Обработчик открытия профиля
+ */
 export default function MainMenu({
   activeMenu,
   onMapSettings,

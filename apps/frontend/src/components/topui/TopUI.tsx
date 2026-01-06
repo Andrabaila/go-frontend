@@ -1,22 +1,19 @@
 import { StatusBar } from '@/components';
 
+/**
+ * Верхний UI компонент со статус-баром и кнопкой меню.
+ * Фиксированное позиционирование для overlay на карте.
+ */
 export default function TopUI() {
   return (
-    <div className="fixed top-0 left-0 right-0 z-[1000] h-0 pointer-events-none ">
-      <div className="w-full pointer-events-auto">
+    <div className="pointer-events-none fixed left-0 right-0 top-0 z-[1000] h-0">
+      <div className="pointer-events-auto w-full">
         <StatusBar />
       </div>
 
       {/* Бургер */}
-      <div className="pointer-events-auto flex justify-end h-0 mt-2 pr-2 ">
-        <button
-          className="
-            bg-gray-900/80 text-white
-            rounded-xl shadow-md
-            w-11 h-11
-            flex items-center justify-center
-          "
-        >
+      <div className="pointer-events-auto mt-2 flex h-0 justify-end pr-2">
+        <button className="flex h-11 w-11 items-center justify-center rounded-xl bg-gray-900/80 text-white shadow-md">
           ☰
         </button>
       </div>

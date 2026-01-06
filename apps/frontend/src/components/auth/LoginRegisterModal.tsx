@@ -10,6 +10,14 @@ interface LoginRegisterModalProps {
   onLoginSuccess?: (email: string) => void;
 }
 
+/**
+ * Модальное окно для входа и регистрации пользователей.
+ * Интегрирует API аутентификации с обработкой ошибок.
+ * @param isOpen - Флаг видимости модального окна
+ * @param onClose - Функция закрытия модального окна
+ * @param onLoginSuccess - Колбэк при успешном входе с email пользователя
+ */
+
 // Тип ошибки с сервера
 interface ApiError {
   response?: {
@@ -56,9 +64,9 @@ export const LoginRegisterModal = ({
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-5000">
-      <div className="bg-white rounded-xl p-6 w-80 relative">
-        <h2 className="text-xl font-bold mb-4 text-center">
+    <div className="z-5000 fixed inset-0 flex items-center justify-center bg-black/50">
+      <div className="relative w-80 rounded-xl bg-white p-6">
+        <h2 className="mb-4 text-center text-xl font-bold">
           {mode === 'login' ? 'Войти' : 'Регистрация'}
         </h2>
 
@@ -69,7 +77,7 @@ export const LoginRegisterModal = ({
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="border p-2 rounded"
+            className="rounded border p-2"
           />
 
           <input
@@ -78,20 +86,20 @@ export const LoginRegisterModal = ({
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="border p-2 rounded"
+            className="rounded border p-2"
           />
 
-          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {error && <p className="text-sm text-red-500">{error}</p>}
 
           <button
             type="submit"
-            className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition"
+            className="rounded bg-blue-500 p-2 text-white transition hover:bg-blue-600"
           >
             {mode === 'login' ? 'Войти' : 'Зарегистрироваться'}
           </button>
         </form>
 
-        <p className="mt-3 text-sm text-center">
+        <p className="mt-3 text-center text-sm">
           {mode === 'login' ? (
             <>
               Нет аккаунта?{' '}
@@ -119,7 +127,7 @@ export const LoginRegisterModal = ({
 
         <button
           type="button"
-          className="absolute top-2 right-3 text-gray-500 hover:text-gray-700"
+          className="absolute right-3 top-2 text-gray-500 hover:text-gray-700"
           onClick={onClose}
         >
           ✕

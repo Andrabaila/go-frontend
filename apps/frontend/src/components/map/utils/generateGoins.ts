@@ -6,7 +6,7 @@ import type { MapGoin } from '@shared/types';
  * @param center - центральные координаты [lat, lng]
  * @param count - количество монет
  */
-export function generateCoins(
+export function generateGoins(
   center: [number, number],
   count: number
 ): MapGoin[] {

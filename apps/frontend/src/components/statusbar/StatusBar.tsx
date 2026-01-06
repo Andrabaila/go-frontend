@@ -7,6 +7,10 @@ interface StatusData {
   balance: number; // goins
 }
 
+/**
+ * Статус-бар с показателями прогресса игрока.
+ * Данные хранятся в localStorage для персистентности.
+ */
 export default function StatusBar() {
   const [status] = useLocalStorage<StatusData>('status', {
     distance: 0,
@@ -16,7 +20,7 @@ export default function StatusBar() {
   });
 
   return (
-    <div className="w-full bg-gray-900/80 text-white text-sm flex justify-around items-center py-2 shadow-md">
+    <div className="flex w-full items-center justify-around bg-gray-900/80 py-2 text-sm text-white shadow-md">
       <div>
         👣{' '}
         <span className="font-semibold">

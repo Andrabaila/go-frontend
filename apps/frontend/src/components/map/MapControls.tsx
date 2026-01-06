@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { ObjectFilterPanel } from '@/components';
-import ButtonLocate from '@/components/ui/ButtonLocate';
+import ButtonLocate from '@/components/map/ButtonLocate';
 import type { MapFeatureCollection } from '@shared/types';
 import geoJsonData from '@/assets/data/osmData.json';
 import type { Map as LeafletMap } from 'leaflet';

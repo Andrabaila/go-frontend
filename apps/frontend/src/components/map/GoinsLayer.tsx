@@ -1,5 +1,5 @@
 import { Marker, Popup } from 'react-leaflet';
-import PopupGodsend from '@/components/ui/PopupGodsend';
+import PopupGodsend from '@/components/map/PopupGodsend';
 import { useCoins } from '@/hooks/useCoins';
 import { coinIcon } from './utils/coinIcon';
 import { filterVisibleCoins } from './utils/filterVisibleCoins';

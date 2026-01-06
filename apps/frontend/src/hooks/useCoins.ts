@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { generateCoins } from '@/components/map/utils/generateGoins';
+import { generateGoins } from '@/components/map/utils/generateGoins';
 import { BASE_COORDS, COINS_COUNT } from '@/constants/map';
 import type { MapGoin } from '@shared/types';
 
@@ -11,7 +11,7 @@ export function useCoins() {
     if (stored) {
       setCoins(JSON.parse(stored));
     } else {
-      const newCoins = generateCoins(BASE_COORDS, COINS_COUNT);
+      const newCoins = generateGoins(BASE_COORDS, COINS_COUNT);
       setCoins(newCoins);
       localStorage.setItem('goinsData', JSON.stringify(newCoins));
     }

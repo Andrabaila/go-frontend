@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { questsApi, type Quest } from '../../api/quests';
 
 interface QuestsListProps {
@@ -6,6 +6,12 @@ interface QuestsListProps {
   onClose: () => void;
 }
 
+/**
+ * Компонент для отображения списка квестов в модальном окне.
+ * Загружает квесты асинхронно при открытии для оптимизации производительности.
+ * @param isOpen - Флаг видимости модального окна
+ * @param onClose - Функция закрытия модального окна
+ */
 export default function QuestsList({ isOpen, onClose }: QuestsListProps) {
   const [quests, setQuests] = useState<Quest[]>([]);
   const [loading, setLoading] = useState(false);
