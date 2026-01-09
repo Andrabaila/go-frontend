@@ -26,11 +26,7 @@ export default function MapComponent({ mapRef, followPlayer }: Props) {
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '100vh' }}>
-      <div
-        style={{ position: 'absolute', bottom: 100, left: 10, zIndex: 1001 }}
-      >
-        <PlayerPositionControl onChange={setPlayerPosition} />
-      </div>
+      <PlayerPositionControl onChange={setPlayerPosition} />
 
       <MapContainer
         center={defaultCenter}

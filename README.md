@@ -9,7 +9,7 @@ Players navigate a real-world map or virtual representation to explore, collect,
 
 - Most objects are global, some are available only on special map layers (e.g., time-based or visible only to certain players).
 - **Fog of War**:
-  - Visible around the player in a 30-meter radius.
+  - Visible around the player in a 50-meter radius.
   - Progress is preserved between sessions.
   - If other players modify the map since the last session, the player must re-explore it. Modified areas remain visible but become non-interactive.
   - Players can share explored areas and purchase exploration data.
@@ -29,8 +29,8 @@ Players navigate a real-world map or virtual representation to explore, collect,
 ## 2. Technology Stack
 
 - **Map:** Leaflet.js + GeoJSON (OpenStreetMap as source)
-- **Frontend:** TypeScript + React + Tailwind CSS + CSS Modules + Inline styles for dynamic UI
-- **Backend:** Node.js + Database (MongoDB/PostgreSQL recommended)
+- **Frontend:** TypeScript + React + Tailwind CSS
+- **Backend:** Node.js + Database (PostgreSQL)
 - **Testing:** Vitest + Testing Library + jsdom
 - **Mobile Build:** React Native
 - **Bundler:** Vite (with cutting-edge TS support and aliasing)

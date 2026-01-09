@@ -84,7 +84,7 @@ export default function ButtonLocate({ mapRef }: Props) {
   if (!shouldShow) return null;
 
   return (
-    <div className="absolute bottom-10 right-4 z-[1000] flex flex-col items-end gap-2">
+    <div className="absolute bottom-20 right-4 z-[1000] flex flex-col items-end gap-2">
       <button
         onClick={handleClick}
         disabled={loading}
