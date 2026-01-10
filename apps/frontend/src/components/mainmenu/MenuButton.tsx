@@ -1,5 +1,3 @@
-import styles from './MainMenuButton.module.css';
-
 interface MenuButtonProps {
   type: 'map' | 'quests' | 'inventory' | 'profile';
   activeMenu: 'map' | 'quests' | 'inventory' | 'profile' | null;
@@ -16,7 +14,9 @@ export default function MenuButton({
   return (
     <button
       onClick={onClick}
-      className={`${styles.base} ${activeMenu === type ? styles.active : styles.inactive}`}
+      className={`flex cursor-pointer flex-col items-center justify-center gap-1 border-none bg-transparent p-2 text-xl transition-colors transition-transform duration-100 duration-200 ease-in-out hover:scale-110 ${
+        activeMenu === type ? 'text-blue-500' : 'text-white'
+      }`}
     >
       {icon}
     </button>
