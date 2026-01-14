@@ -6,6 +6,17 @@
   "license": "LICENSED",
   "author": "Yury Andrabaila",
   "type": "module",
+  "exports": {
+    ".": "./dist/index.d.ts",
+    "./types/auth": "./dist/types/auth.d.ts",
+    "./types/base": "./dist/types/base.d.ts",
+    "./types/map": "./dist/types/map.d.ts",
+    "./types/ui": "./dist/types/ui.d.ts",
+    "./types/api": "./dist/types/api.d.ts",
+    "./types/game": "./dist/types/game.d.ts",
+    "./types/*": "./dist/types/*.d.ts",
+    "./constants": "./dist/constants.d.ts"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsc -p tsconfig.json --watch"
