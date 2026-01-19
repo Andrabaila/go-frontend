@@ -19,12 +19,24 @@ import { Quest } from './quests/quest.entity.js';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      url: process.env.DATABASE_URL,
+
+      ...(process.env.DATABASE_URL
+        ? {
+            url: process.env.DATABASE_URL,
+            ssl: {
+              rejectUnauthorized: false,
+            },
+          }
+        : {
+            host: 'localhost',
+            port: 5432,
+            username: 'postgres',
+            password: 'very-secret-password',
+            database: 'go_game',
+          }),
+
       entities: [Player, User, Quest],
       synchronize: true,
-      ssl: {
-        rejectUnauthorized: false,
-      },
     }),
     PlayersModule,
     GameObjectsModule,
