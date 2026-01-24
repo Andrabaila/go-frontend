@@ -124,6 +124,4 @@ Players navigate a real-world map or virtual representation to explore, collect,
 
 1. Install dependencies:
 
-```bash
 npm install
-```
