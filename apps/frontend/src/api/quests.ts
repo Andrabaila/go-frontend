@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://localhost:3000'; // Adjust if needed
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'https://localhost:3000';
 
 export interface Quest {
   id: string;
@@ -8,6 +8,24 @@ export interface Quest {
   description: string;
   status: 'active' | 'completed' | 'pending';
   playerId?: string;
+  objectives?: {
+    type: 'visit_points';
+    requiredCount: number;
+    radiusMeters: number;
+    points: {
+      id: string;
+      label?: string;
+      lat?: number;
+      lng?: number;
+    }[];
+  };
+  progress?: {
+    visitedPointIds?: string[];
+  };
+  reward?: {
+    gold?: number;
+    item?: string;
+  };
 }
 
 export const questsApi = {
@@ -36,6 +54,16 @@ export const questsApi = {
   ): Promise<Quest> {
     const response = await axios.put(`${API_BASE_URL}/quests/${id}/status`, {
       status,
+    });
+    return response.data;
+  },
+
+  async updateQuestProgress(
+    id: string,
+    visitedPointIds: string[]
+  ): Promise<Quest> {
+    const response = await axios.put(`${API_BASE_URL}/quests/${id}/progress`, {
+      visitedPointIds,
     });
     return response.data;
   },

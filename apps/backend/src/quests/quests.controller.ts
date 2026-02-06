@@ -45,6 +45,14 @@ export class QuestsController {
     return this.questsService.updateStatus(id, status);
   }
 
+  @Put(':id/progress')
+  async updateProgress(
+    @Param('id') id: string,
+    @Body('visitedPointIds') visitedPointIds: string[]
+  ): Promise<Quest | null> {
+    return this.questsService.updateProgress(id, visitedPointIds ?? []);
+  }
+
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<void> {
     return this.questsService.delete(id);
