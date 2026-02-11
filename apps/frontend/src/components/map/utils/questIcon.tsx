@@ -2,6 +2,9 @@ import { MapPin } from 'lucide-react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { divIcon } from 'leaflet';
 
+const wrap = (svg: string, className: string) =>
+  `<div class="${className}">${svg}</div>`;
+
 const questActiveSvg = renderToStaticMarkup(
   <MapPin size={28} color="#2563eb" />
 );
@@ -13,7 +16,7 @@ const questInactiveSvg = renderToStaticMarkup(
 );
 
 export const questActiveIcon = divIcon({
-  html: questActiveSvg,
+  html: wrap(questActiveSvg, 'quest-pin quest-pin--active'),
   className: '',
   iconSize: [32, 32],
   iconAnchor: [16, 32],
@@ -21,7 +24,7 @@ export const questActiveIcon = divIcon({
 });
 
 export const questVisitedIcon = divIcon({
-  html: questVisitedSvg,
+  html: wrap(questVisitedSvg, 'quest-pin quest-pin--visited'),
   className: '',
   iconSize: [32, 32],
   iconAnchor: [16, 32],
@@ -29,7 +32,7 @@ export const questVisitedIcon = divIcon({
 });
 
 export const questInactiveIcon = divIcon({
-  html: questInactiveSvg,
+  html: wrap(questInactiveSvg, 'quest-pin quest-pin--inactive'),
   className: '',
   iconSize: [32, 32],
   iconAnchor: [16, 32],
