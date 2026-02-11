@@ -118,3 +118,5 @@ Players navigate a real-world map or virtual representation to explore, collect,
 - **Fog of War Mechanics:** implemented with local caching, dynamic map layers, and persistence across sessions.
 
 ---
+
+---
