@@ -116,3 +116,5 @@ Players navigate a real-world map or virtual representation to explore, collect,
 - **Vitest:** modern unit testing with `setupTests.ts` for global test setup (`@testing-library/jest-dom`).
 - **Fast Refresh & Hooks:** enforced via ESLint plugins and Vite React plugin.
 - **Fog of War Mechanics:** implemented with local caching, dynamic map layers, and persistence across sessions.
+
+---
