@@ -113,7 +113,6 @@ Players navigate a real-world map or virtual representation to explore, collect,
 
 - **Strict TypeScript:** full type safety with experimental compiler options.
 - **Linting & Formatting:** ESLint + Prettier integration, unused directives enforced.
-- **Absolute Imports:** configured with `@` alias, synced with TS paths.
 - **Vitest:** modern unit testing with `setupTests.ts` for global test setup (`@testing-library/jest-dom`).
 - **Fast Refresh & Hooks:** enforced via ESLint plugins and Vite React plugin.
 - **Fog of War Mechanics:** implemented with local caching, dynamic map layers, and persistence across sessions.
