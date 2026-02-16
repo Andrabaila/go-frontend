@@ -29,10 +29,8 @@ Players navigate a real-world map or virtual representation to explore, collect,
 ## 2. Technology Stack
 
 - **Map:** Leaflet.js + GeoJSON (OpenStreetMap as source)
-- **Frontend:** TypeScript + React + Tailwind CSS
-- **Backend:** Node.js + Database (PostgreSQL)
+- **Frontend:** TypeScript + React 19 + Tailwind CSS
 - **Testing:** Vitest + Testing Library + jsdom
-- **Mobile Build:** React Native
 - **Bundler:** Vite (with cutting-edge TS support and aliasing)
 
 ---

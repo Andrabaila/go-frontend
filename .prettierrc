@@ -7,5 +7,5 @@
   "useTabs": false,
   "endOfLine": "auto",
   "plugins": ["prettier-plugin-packagejson", "prettier-plugin-tailwindcss"],
-  "tailwindConfig": "./packages/config/tailwind/tailwind.config.ts"
+  "tailwindConfig": "./tailwind.config.ts"
 }
