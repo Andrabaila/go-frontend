@@ -7,7 +7,7 @@ import tailwindcss from '@tailwindcss/vite';
 import fs from 'fs';
 
 export default defineConfig({
-  base: '/go/',
+  base: '/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
