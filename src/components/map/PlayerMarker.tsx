@@ -5,6 +5,7 @@ import L from 'leaflet';
 import { PLAYER_VISIBLE_RADIUS } from '@/constants/map';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { updateExploredArea } from '@/utils';
+import playerIconUrl from '@/assets/player.png';
 
 interface StatusData {
   distance: number; // метры
@@ -17,6 +18,12 @@ interface Props {
   position: LatLngExpression | null;
   follow: boolean;
 }
+
+const playerIcon = L.icon({
+  iconUrl: playerIconUrl,
+  iconSize: [36, 36],
+  iconAnchor: [18, 18],
+});
 
 export default function PlayerMarker({ position, follow }: Props) {
   const map = useMap();
@@ -85,5 +92,5 @@ export default function PlayerMarker({ position, follow }: Props) {
   }, [position, setStatus]);
 
   if (!position) return null;
-  return <Marker position={position} />;
+  return <Marker position={position} icon={playerIcon} />;
 }
