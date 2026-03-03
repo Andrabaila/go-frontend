@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { LoginRequest, RegisterRequest } from '@shared/types/auth';
 
-const API_URL = import.meta.env.VITE_API_URL ?? 'https://localhost:3000';
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const loginUser = async (
   data: LoginRequest
