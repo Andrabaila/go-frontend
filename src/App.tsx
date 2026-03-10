@@ -20,7 +20,6 @@ function App() {
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [filter, setFilter] = useState<string[]>([]);
   const [followPlayer, setFollowPlayer] = useState(true);
-  // const [isMapSettingsOpen, setIsMapControlsOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState<MainMenuItem>(null);
   const toggleMenu = (menu: MainMenuItem) => {
     setActiveMenu((prev) => (prev === menu ? null : menu));
@@ -63,8 +62,8 @@ function App() {
         isOpen={isModalOpen}
         onClose={() => setModalOpen(false)}
         onLoginSuccess={(email) => {
-          setUserEmail(email); // ← сохраняем email
-          setModalOpen(false); // ← закрываем модалку
+          setUserEmail(email);
+          setModalOpen(false);
         }}
       />
       <MapComponent mapRef={mapRef} followPlayer={false} />
