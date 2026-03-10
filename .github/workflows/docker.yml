@@ -49,7 +49,7 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/go-frontend:latest
           build-args: |
-            VITE_API_URL=${{ vars.VITE_API_URL || 'http://localhost:3000' }}
+            VITE_API_URL=${{ vars.VITE_API_URL || vars.VITE_API_URL_HTTP }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -74,6 +74,6 @@ jobs:
               --env-file /home/ya/.env \
               --name go-frontend \
               --restart always \
-              -p 3000:3000 \
+              -p 80:80 \
               ${{ secrets.DOCKERHUB_USERNAME }}/go-frontend:latest
           "
