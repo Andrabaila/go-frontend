@@ -67,7 +67,7 @@ jobs:
       - name: Deploy to server
         run: |
           ssh -o StrictHostKeyChecking=no ya@100.113.39.97 "
-            docker system prune -f &&
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/go-frontend:latest &&
             docker stop go-frontend || true &&
             docker rm go-frontend || true &&
             docker run -d \
