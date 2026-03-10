@@ -56,7 +56,7 @@ export default function PlayerPositionControl({ onChange }: Props) {
             checked={useGPS}
             onChange={(e) => setUseGPS(e.target.checked)}
           />{' '}
-          Использовать GPS
+          Use GPS
         </label>
 
         <div style={{ marginBottom: 8 }}>
