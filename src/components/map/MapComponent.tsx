@@ -1,17 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import type { Map as LeafletMap } from 'leaflet';
-import {
-  GoinsLayer,
-  PlayerMarker,
-  PlayerPositionControl,
-  QuestPointsLayer,
-} from '@/components';
+import { GoinsLayer, PlayerMarker, QuestPointsLayer } from '@/components';
 import type { Quest } from '@/api/quests';
 
 interface Props {
   mapRef: React.RefObject<LeafletMap | null>;
   followPlayer: boolean;
+  playerPosition: [number, number] | null;
 }
 
 /**
@@ -21,10 +17,11 @@ interface Props {
  * @param mapRef - Ref для экземпляра Leaflet Map
  * @param followPlayer - Флаг автоматического следования за игроком
  */
-export default function MapComponent({ mapRef, followPlayer }: Props) {
-  const [playerPosition, setPlayerPosition] = useState<[number, number] | null>(
-    [52.1506, 21.0336]
-  );
+export default function MapComponent({
+  mapRef,
+  followPlayer,
+  playerPosition,
+}: Props) {
   const [completionNotice, setCompletionNotice] = useState<{
     title: string;
     rewardText: string | null;
@@ -67,8 +64,6 @@ export default function MapComponent({ mapRef, followPlayer }: Props) {
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '100vh' }}>
-      <PlayerPositionControl onChange={setPlayerPosition} />
-
       {completionNotice && (
         <div className="pointer-events-none absolute left-1/2 top-4 z-[1001] w-[90%] max-w-sm -translate-x-1/2 animate-bounce rounded-lg border border-green-300 bg-green-50 px-4 py-3 text-sm text-green-800 shadow-lg">
           <div className="font-semibold">

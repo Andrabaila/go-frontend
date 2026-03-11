@@ -20,6 +20,9 @@ function App() {
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [filter, setFilter] = useState<string[]>([]);
   const [followPlayer, setFollowPlayer] = useState(true);
+  const [playerPosition, setPlayerPosition] = useState<[number, number] | null>(
+    [52.1506, 21.0336]
+  );
   const [activeMenu, setActiveMenu] = useState<MainMenuItem>(null);
   const toggleMenu = (menu: MainMenuItem) => {
     setActiveMenu((prev) => (prev === menu ? null : menu));
@@ -33,6 +36,7 @@ function App() {
         followPlayer={followPlayer}
         setFollowPlayer={setFollowPlayer}
         mapRef={mapRef}
+        onPlayerPositionChange={setPlayerPosition}
         isOpen={activeMenu === 'map'}
         onClose={() => setActiveMenu(null)}
       />
@@ -66,7 +70,11 @@ function App() {
           setModalOpen(false);
         }}
       />
-      <MapComponent mapRef={mapRef} followPlayer={false} />
+      <MapComponent
+        mapRef={mapRef}
+        followPlayer={false}
+        playerPosition={playerPosition}
+      />
     </div>
   );
 }
