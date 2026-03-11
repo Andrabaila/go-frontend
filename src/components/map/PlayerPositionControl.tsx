@@ -60,7 +60,7 @@ export default function PlayerPositionControl({ onChange }: Props) {
         </label>
 
         <div style={{ marginBottom: 8 }}>
-          <strong>Широта:</strong>{' '}
+          <strong>Lat:</strong>{' '}
           {useGPS ? gpsPosition?.[0]?.toFixed(6) : manualPosition[0].toFixed(6)}
           {!useGPS && (
             <div style={{ display: 'flex', gap: 4, marginTop: 4 }}>
@@ -81,7 +81,7 @@ export default function PlayerPositionControl({ onChange }: Props) {
         </div>
 
         <div style={{ marginBottom: 8 }}>
-          <strong>Долгота:</strong>{' '}
+          <strong>Lon:</strong>{' '}
           {useGPS ? gpsPosition?.[1]?.toFixed(6) : manualPosition[1].toFixed(6)}
           {!useGPS && (
             <div style={{ display: 'flex', gap: 4, marginTop: 4 }}>
