@@ -10,23 +10,60 @@ export function usePlayerPosition(
   });
 
   useEffect(() => {
-    if (!navigator.geolocation) return;
+    if (!follow) return;
+    if (!navigator.geolocation) {
+      console.warn('Geolocation is not supported by this browser.');
+      return;
+    }
+
+    const handlePosition = (pos: GeolocationPosition) => {
+      const { latitude, longitude } = pos.coords;
+      const newPos: [number, number] = [latitude, longitude];
+      setPosition(newPos);
+      onPositionChange(newPos);
+      localStorage.setItem('playerPosition', JSON.stringify(newPos));
+    };
+
+    let isMounted = true;
 
     const watcher = navigator.geolocation.watchPosition(
       (pos) => {
-        const { latitude, longitude } = pos.coords;
-        const newPos: [number, number] = [latitude, longitude];
-        setPosition(newPos);
-        onPositionChange(newPos);
-        localStorage.setItem('playerPosition', JSON.stringify(newPos));
+        if (!isMounted) return;
+        handlePosition(pos);
       },
       (err) => {
-        console.warn('Ошибка геопозиции:', err);
+        if (!isMounted) return;
+        console.warn('Ошибка геопозиции (GPS):', err);
+
+        // Fallback for devices without GPS: try low-accuracy (network) position.
+        if (err.code !== err.PERMISSION_DENIED) {
+          navigator.geolocation.getCurrentPosition(
+            (fallbackPos) => {
+              if (!isMounted) return;
+              handlePosition(fallbackPos);
+            },
+            (fallbackErr) => {
+              if (!isMounted) return;
+              console.warn('Ошибка геопозиции (network):', fallbackErr);
+            },
+            {
+              enableHighAccuracy: false,
+              maximumAge: 600000,
+              timeout: 10000,
+            }
+          );
+        }
       },
-      { enableHighAccuracy: true }
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+      }
     );
 
-    return () => navigator.geolocation.clearWatch(watcher);
+    return () => {
+      isMounted = false;
+      navigator.geolocation.clearWatch(watcher);
+    };
   }, [follow, onPositionChange]);
 
   return position;
