@@ -53,7 +53,6 @@ function App() {
         onClick={() => setModalOpen(true)}
         userEmail={userEmail}
         isOpen={activeMenu === 'profile'}
-        onClose={() => setActiveMenu(null)}
       />
       <LoginRegisterModal
         isOpen={isModalOpen}
