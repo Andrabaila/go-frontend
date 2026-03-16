@@ -18,8 +18,6 @@ function App() {
   const mapRef = useRef<LeafletMap | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
-  const [filter, setFilter] = useState<string[]>([]);
-  const [followPlayer, setFollowPlayer] = useState(true);
   const [playerPosition, setPlayerPosition] = useState<[number, number] | null>(
     [52.1506, 21.0336]
   );
@@ -31,14 +29,9 @@ function App() {
   return (
     <div className="relative h-screen w-full">
       <MapControls
-        filter={filter}
-        setFilter={setFilter}
-        followPlayer={followPlayer}
-        setFollowPlayer={setFollowPlayer}
         mapRef={mapRef}
         onPlayerPositionChange={setPlayerPosition}
         isOpen={activeMenu === 'map'}
-        onClose={() => setActiveMenu(null)}
       />
       <QuestsList
         isOpen={activeMenu === 'quests'}
