@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { ObjectFilterPanel, PlayerPositionControl } from '@/components';
+import { PlayerPositionControl } from '@/components';
 import ButtonLocate from '@/components/map/ButtonLocate';
 import type { MapFeatureCollection } from '@shared/types';
 import geoJsonData from '@/assets/data/osmData.json';
@@ -41,11 +41,6 @@ export default function MapControls({
 
   return (
     <>
-      <ObjectFilterPanel
-        availableTypes={availableTypes}
-        selectedTypes={filter}
-        onToggle={toggleType}
-      />
       <ButtonLocate mapRef={mapRef} />
       <PlayerPositionControl onChange={onPlayerPositionChange} />
     </>

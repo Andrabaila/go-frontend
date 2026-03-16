@@ -1,5 +1,4 @@
 export { default as MapComponent } from './MapComponent';
-export { default as ObjectFilterPanel } from './ObjectFilterPanel';
 export { default as GoinsLayer } from './GoinsLayer';
 export { default as QuestPointsLayer } from './QuestPointsLayer';
 export { default as MapControls } from './MapControls';
