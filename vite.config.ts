@@ -20,7 +20,7 @@ export default defineConfig(({ command }) => {
       },
     },
     server: {
-      host: 'localhost',
+      host: '0.0.0.0',
       ...(command === 'serve' && hasLocalCerts
         ? {
             https: {

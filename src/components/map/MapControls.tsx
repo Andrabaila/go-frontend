@@ -1,51 +1,21 @@
-import { useMemo } from 'react';
-import { ObjectFilterPanel, PlayerPositionControl } from '@/components';
-import ButtonLocate from '@/components/map/ButtonLocate';
-import type { MapFeatureCollection } from '@shared/types';
-import geoJsonData from '@/assets/data/osmData.json';
+import { PlayerPositionControl, ButtonLocate } from '@/components';
 import type { Map as LeafletMap } from 'leaflet';
 
 interface Props {
-  filter: string[];
-  setFilter: React.Dispatch<React.SetStateAction<string[]>>;
-  followPlayer: boolean;
-  setFollowPlayer: React.Dispatch<React.SetStateAction<boolean>>;
   mapRef: React.RefObject<LeafletMap | null>;
   onPlayerPositionChange: (position: [number, number]) => void;
   isOpen: boolean;
-  onClose: () => void;
 }
 
 export default function MapControls({
-  filter,
-  setFilter,
   mapRef,
   onPlayerPositionChange,
   isOpen,
 }: Props) {
-  const availableTypes = useMemo(() => {
-    const types = new Set<string>();
-    (geoJsonData as MapFeatureCollection).features.forEach((f) => {
-      if (f.properties.type) types.add(f.properties.type);
-    });
-    return Array.from(types);
-  }, []);
-
-  const toggleType = (type: string) => {
-    setFilter((prev) =>
-      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
-    );
-  };
-
   if (!isOpen) return null;
 
   return (
     <>
-      <ObjectFilterPanel
-        availableTypes={availableTypes}
-        selectedTypes={filter}
-        onToggle={toggleType}
-      />
       <ButtonLocate mapRef={mapRef} />
       <PlayerPositionControl onChange={onPlayerPositionChange} />
     </>
