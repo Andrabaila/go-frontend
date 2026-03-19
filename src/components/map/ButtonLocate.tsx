@@ -21,7 +21,7 @@ export default function ButtonLocate({ mapRef }: Props) {
     navigator.geolocation.getCurrentPosition(
       (pos) => setUserLocation([pos.coords.latitude, pos.coords.longitude]),
       () => setError('⚠️ Не удалось определить местоположение.'),
-      { enableHighAccuracy: false, maximumAge: 30000, timeout: 5000 }
+      { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
     );
   }, []);
 
@@ -75,9 +75,9 @@ export default function ButtonLocate({ mapRef }: Props) {
         setLoading(false);
       },
       {
-        enableHighAccuracy: false, // быстрее, использует Wi-Fi/IP
-        maximumAge: 30000, // можно брать из кеша до 30 сек
-        timeout: 5000, // ограничиваем ожидание 5 сек
+        enableHighAccuracy: true,
+        maximumAge: 0,
+        timeout: 10000,
       }
     );
   };
