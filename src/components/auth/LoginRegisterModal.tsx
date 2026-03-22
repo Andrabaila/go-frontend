@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { LoginRequest, RegisterRequest } from '@shared/types/auth';
+import type { LoginRequest, RegisterRequest } from '@/types/auth';
 import { loginUser, registerUser } from '../../api/auth';
 
 type Mode = 'login' | 'register';

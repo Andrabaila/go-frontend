@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getBackpack, removeFromBackpack } from '@/assets/data/backpackStorage';
-import type { BackpackItem } from '@shared/types';
+import type { BackpackItem } from '@/types';
 import { BackpackList } from '@/components/';
 
 interface Props {

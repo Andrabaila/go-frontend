@@ -1,5 +1,5 @@
 import { MAX_DISTANCE_FROM_BASE } from '@/constants/map';
-import type { MapGoin } from '@shared/types';
+import type { MapGoin } from '@/types';
 
 /**
  * Генерация массива случайных "монет" в пределах радиуса ~1 км.

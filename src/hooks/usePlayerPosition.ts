@@ -34,25 +34,6 @@ export function usePlayerPosition(
       (err) => {
         if (!isMounted) return;
         console.warn('Ошибка геопозиции (GPS):', err);
-
-        // Fallback for devices without GPS: try low-accuracy (network) position.
-        if (err.code !== err.PERMISSION_DENIED) {
-          navigator.geolocation.getCurrentPosition(
-            (fallbackPos) => {
-              if (!isMounted) return;
-              handlePosition(fallbackPos);
-            },
-            (fallbackErr) => {
-              if (!isMounted) return;
-              console.warn('Ошибка геопозиции (network):', fallbackErr);
-            },
-            {
-              enableHighAccuracy: false,
-              maximumAge: 600000,
-              timeout: 10000,
-            }
-          );
-        }
       },
       {
         enableHighAccuracy: true,
