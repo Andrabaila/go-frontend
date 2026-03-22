@@ -22,6 +22,8 @@ export default function MapComponent({
   const noticeTimerRef = useRef<number | null>(null);
 
   const internalMapRef = useRef<LeafletMap>(null);
+  const [mapReady, setMapReady] = useState(false);
+  const hasCenteredOnPlayer = useRef(false);
 
   const defaultCenter = playerPosition ?? [52.1506, 21.0336];
 
@@ -55,6 +57,16 @@ export default function MapComponent({
     };
   }, []);
 
+  useEffect(() => {
+    if (!playerPosition || !internalMapRef.current || !mapReady) return;
+    if (hasCenteredOnPlayer.current) return;
+    internalMapRef.current.setView(
+      playerPosition,
+      internalMapRef.current.getZoom()
+    );
+    hasCenteredOnPlayer.current = true;
+  }, [playerPosition, mapReady]);
+
   return (
     <div style={{ position: 'relative', width: '100%', height: '100vh' }}>
       {completionNotice && (
@@ -76,8 +88,10 @@ export default function MapComponent({
         zoomControl={false}
         style={{ width: '100%', height: '100%' }}
         ref={(mapInstance: LeafletMap) => {
+          if (!mapInstance) return;
           mapRef.current = mapInstance;
           internalMapRef.current = mapInstance;
+          setMapReady(true);
         }}
       >
         <PlayerMarker position={playerPosition} follow={followPlayer} />
