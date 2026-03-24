@@ -41,6 +41,7 @@ export default function QuestsShowcase({
   const [quests, setQuests] = useState<Quest[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedQuest, setSelectedQuest] = useState<Quest | null>(null);
 
   const loadQuests = useCallback(async () => {
     setLoading(true);
@@ -80,6 +81,112 @@ export default function QuestsShowcase({
         className="mx-auto flex h-full w-full max-w-6xl flex-col gap-4 p-4 sm:p-6"
         onClick={(event) => event.stopPropagation()}
       >
+        {selectedQuest && (
+          <div
+            className="fixed inset-0 z-[1005] bg-slate-950/95"
+            onClick={() => setSelectedQuest(null)}
+          >
+            <div
+              className="mx-auto flex h-full w-full max-w-4xl flex-col gap-4 p-4 sm:p-6"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.3em] text-slate-400">
+                    Детали квеста
+                  </p>
+                  <h2 className="text-2xl font-semibold text-white sm:text-3xl">
+                    {selectedQuest.title}
+                  </h2>
+                </div>
+                <button
+                  onClick={() => setSelectedQuest(null)}
+                  className="rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/10"
+                  aria-label="Закрыть детали квеста"
+                >
+                  Назад
+                </button>
+              </div>
+
+              <div className="min-h-0 flex-1 overflow-y-auto rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-transparent p-4 text-white shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
+                <div className="flex flex-wrap items-center gap-2 text-xs text-slate-300">
+                  <span
+                    className={`rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-wide ${
+                      statusMeta[selectedQuest.status].classes
+                    }`}
+                  >
+                    {statusMeta[selectedQuest.status].label}
+                  </span>
+                  {selectedQuest.playerId && (
+                    <span className="rounded-full border border-white/15 px-3 py-1">
+                      Игрок: {selectedQuest.playerId}
+                    </span>
+                  )}
+                </div>
+                <p className="mt-4 text-sm text-slate-200">
+                  {selectedQuest.description}
+                </p>
+
+                {selectedQuest.objectives?.type === 'visit_points' && (
+                  <div className="mt-6 space-y-3 text-sm text-slate-200">
+                    <div className="flex flex-wrap gap-2 text-xs text-slate-300">
+                      <span className="rounded-full border border-white/15 px-3 py-1">
+                        Точек: {selectedQuest.objectives.points.length}
+                      </span>
+                      <span className="rounded-full border border-white/15 px-3 py-1">
+                        Нужно: {selectedQuest.objectives.requiredCount}
+                      </span>
+                      <span className="rounded-full border border-white/15 px-3 py-1">
+                        Радиус: {selectedQuest.objectives.radiusMeters} м
+                      </span>
+                    </div>
+                    <div className="rounded-xl border border-white/10 bg-white/5 p-3">
+                      <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
+                        Маршрут
+                      </p>
+                      <ul className="mt-2 space-y-2 text-sm text-slate-200">
+                        {selectedQuest.objectives.points.map((point, index) => (
+                          <li
+                            key={point.id}
+                            className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2"
+                          >
+                            <span>
+                              {index + 1}. {point.label ?? 'Метка'}
+                            </span>
+                            {point.lat != null && point.lng != null && (
+                              <span className="text-xs text-slate-400">
+                                {point.lat.toFixed(4)}, {point.lng.toFixed(4)}
+                              </span>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )}
+
+                {selectedQuest.reward && (
+                  <div className="mt-6 rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-slate-200">
+                    <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
+                      Награда
+                    </p>
+                    <p className="mt-2">
+                      {[
+                        selectedQuest.reward.gold != null
+                          ? `${selectedQuest.reward.gold} монет`
+                          : null,
+                        selectedQuest.reward.item ? selectedQuest.reward.item : null,
+                      ]
+                        .filter(Boolean)
+                        .join(', ') || 'Нет данных'}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-slate-400">
@@ -130,7 +237,8 @@ export default function QuestsShowcase({
                 return (
                   <article
                     key={quest.id}
-                    className="flex h-full flex-col gap-3 rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-transparent p-4 text-white shadow-[0_20px_60px_rgba(0,0,0,0.35)]"
+                    onClick={() => setSelectedQuest(quest)}
+                    className="flex h-full cursor-pointer flex-col gap-3 rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-transparent p-4 text-white shadow-[0_20px_60px_rgba(0,0,0,0.35)] transition hover:-translate-y-1 hover:border-white/30"
                   >
                     <div className="flex items-start justify-between gap-2">
                       <h3 className="text-lg font-semibold leading-snug">
