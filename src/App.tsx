@@ -11,20 +11,26 @@ import {
   MapControls,
   MainMenu,
   QuestsList,
+  QuestsShowcase,
 } from '@/components';
-type MainMenuItem = 'map' | 'quests' | 'inventory' | 'profile' | null;
+import { usePlayerPosition } from '@/hooks/usePlayerPosition';
+type MainMenuItem = 'showcase' | 'map' | 'quests' | 'inventory' | 'profile' | null;
 
 function App() {
   const mapRef = useRef<LeafletMap | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [playerPosition, setPlayerPosition] = useState<[number, number] | null>(
-    [52.1506, 21.0336]
+    () => {
+      const stored = localStorage.getItem('playerPosition');
+      return stored ? (JSON.parse(stored) as [number, number]) : null;
+    }
   );
   const [activeMenu, setActiveMenu] = useState<MainMenuItem>(null);
   const toggleMenu = (menu: MainMenuItem) => {
     setActiveMenu((prev) => (prev === menu ? null : menu));
   };
+  usePlayerPosition(true, setPlayerPosition);
 
   return (
     <div className="relative h-screen w-full">
@@ -32,6 +38,10 @@ function App() {
         mapRef={mapRef}
         onPlayerPositionChange={setPlayerPosition}
         isOpen={activeMenu === 'map'}
+      />
+      <QuestsShowcase
+        isOpen={activeMenu === 'showcase'}
+        onClose={() => setActiveMenu(null)}
       />
       <QuestsList
         isOpen={activeMenu === 'quests'}
@@ -44,6 +54,7 @@ function App() {
       <TopUI />
       <MainMenu
         activeMenu={activeMenu}
+        onShowcase={() => toggleMenu('showcase')}
         onMapSettings={() => toggleMenu('map')}
         onQuests={() => toggleMenu('quests')}
         onInventory={() => toggleMenu('inventory')}

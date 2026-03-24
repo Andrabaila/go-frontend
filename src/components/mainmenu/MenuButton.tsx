@@ -1,6 +1,6 @@
 interface MenuButtonProps {
-  type: 'map' | 'quests' | 'inventory' | 'profile';
-  activeMenu: 'map' | 'quests' | 'inventory' | 'profile' | null;
+  type: 'showcase' | 'map' | 'quests' | 'inventory' | 'profile';
+  activeMenu: 'showcase' | 'map' | 'quests' | 'inventory' | 'profile' | null;
   onClick: () => void;
   icon: string;
 }

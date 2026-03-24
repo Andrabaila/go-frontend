@@ -14,18 +14,30 @@ export default function ButtonLocate({ mapRef }: Props) {
     null
   );
 
-  // Получаем текущее положение при монтировании
+  // Get current position on mount
   useEffect(() => {
     if (!navigator.geolocation) return;
+    let isMounted = true;
 
     navigator.geolocation.getCurrentPosition(
-      (pos) => setUserLocation([pos.coords.latitude, pos.coords.longitude]),
-      () => setError('⚠️ Не удалось определить местоположение.'),
+      (pos) => {
+        if (!isMounted) return;
+        setUserLocation([pos.coords.latitude, pos.coords.longitude]);
+      },
+      () => {
+        if (!isMounted) return;
+        setError('⚠️ Unable to determine location.');
+        setShouldShow(true);
+      },
       { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
     );
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  // Следим за движением карты и сравниваем с позицией пользователя
+  // Track map movement and compare with user position
   useEffect(() => {
     if (!mapRef.current || !userLocation) return;
 
@@ -47,19 +59,20 @@ export default function ButtonLocate({ mapRef }: Props) {
 
   const handleClick = () => {
     if (!navigator.geolocation) {
-      setError('❌ Геолокация не поддерживается вашим браузером.');
+      setError('❌ Geolocation is not supported by your browser.');
       return;
     }
 
     setLoading(true);
     setError(null);
 
-    // ⚡️ моментальное перемещение к последней известной позиции
-    if (userLocation && mapRef.current) {
-      mapRef.current.setView(userLocation, 16);
+    // ⚡️ instantly move to the last known position
+    const map = mapRef.current;
+    if (userLocation && map) {
+      map.setView(userLocation, 16);
     }
 
-    // ⚙️ обновляем координаты с быстрым таймаутом
+    // ⚙️ update coordinates with a fast timeout
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const { latitude, longitude } = pos.coords;
@@ -71,7 +84,7 @@ export default function ButtonLocate({ mapRef }: Props) {
         setLoading(false);
       },
       () => {
-        setError('⚠️ Не удалось получить координаты.');
+        setError('⚠️ Unable to get coordinates.');
         setLoading(false);
       },
       {
@@ -81,7 +94,8 @@ export default function ButtonLocate({ mapRef }: Props) {
       }
     );
   };
-  if (!shouldShow) return null;
+  const isVisible = !userLocation || shouldShow;
+  if (!isVisible) return null;
 
   return (
     <div className="absolute bottom-20 right-4 z-[1000] flex flex-col items-end gap-2">
@@ -95,9 +109,6 @@ export default function ButtonLocate({ mapRef }: Props) {
           strokeWidth={2}
           className={loading ? 'animate-spin' : ''}
         />
-        <span className="hidden sm:inline">
-          {loading ? 'Определение...' : 'Моё местоположение'}
-        </span>
       </button>
 
       {error && (

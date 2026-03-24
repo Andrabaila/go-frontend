@@ -48,6 +48,8 @@ export default function QuestsList({ isOpen, onClose }: QuestsListProps) {
         <h2 className="mb-4 text-lg font-bold">Квесты</h2>
         {loading ? (
           <p>Loading...</p>
+        ) : quests.length === 0 ? (
+          <p className="text-sm text-gray-600">Нет активных квестов</p>
         ) : (
           <ul className="space-y-2">
             {quests.map((quest) => (
