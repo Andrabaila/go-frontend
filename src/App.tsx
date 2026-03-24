@@ -11,9 +11,10 @@ import {
   MapControls,
   MainMenu,
   QuestsList,
+  QuestsShowcase,
 } from '@/components';
 import { usePlayerPosition } from '@/hooks/usePlayerPosition';
-type MainMenuItem = 'map' | 'quests' | 'inventory' | 'profile' | null;
+type MainMenuItem = 'showcase' | 'map' | 'quests' | 'inventory' | 'profile' | null;
 
 function App() {
   const mapRef = useRef<LeafletMap | null>(null);
@@ -38,6 +39,10 @@ function App() {
         onPlayerPositionChange={setPlayerPosition}
         isOpen={activeMenu === 'map'}
       />
+      <QuestsShowcase
+        isOpen={activeMenu === 'showcase'}
+        onClose={() => setActiveMenu(null)}
+      />
       <QuestsList
         isOpen={activeMenu === 'quests'}
         onClose={() => setActiveMenu(null)}
@@ -49,6 +54,7 @@ function App() {
       <TopUI />
       <MainMenu
         activeMenu={activeMenu}
+        onShowcase={() => toggleMenu('showcase')}
         onMapSettings={() => toggleMenu('map')}
         onQuests={() => toggleMenu('quests')}
         onInventory={() => toggleMenu('inventory')}

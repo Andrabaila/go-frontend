@@ -1,7 +1,8 @@
 import MenuButton from './MenuButton';
 
 interface MainMenuProps {
-  activeMenu: 'map' | 'quests' | 'inventory' | 'profile' | null;
+  activeMenu: 'showcase' | 'map' | 'quests' | 'inventory' | 'profile' | null;
+  onShowcase: () => void;
   onMapSettings: () => void;
   onQuests: () => void;
   onInventory: () => void;
@@ -12,6 +13,7 @@ interface MainMenuProps {
  * Главное меню навигации с кнопками для разделов.
  * Управляет активным состоянием меню для переключения панелей.
  * @param activeMenu - Текущий активный раздел меню
+ * @param onShowcase - Обработчик открытия витрины квестов
  * @param onMapSettings - Обработчик открытия настроек карты
  * @param onQuests - Обработчик открытия квестов
  * @param onInventory - Обработчик открытия инвентаря
@@ -19,6 +21,7 @@ interface MainMenuProps {
  */
 export default function MainMenu({
   activeMenu,
+  onShowcase,
   onMapSettings,
   onQuests,
   onInventory,
@@ -28,6 +31,12 @@ export default function MainMenu({
     <nav
       className={`fixed bottom-0 left-0 z-[1001] flex w-full items-center justify-around bg-gray-900/80 py-2 text-xs shadow-md`}
     >
+      <MenuButton
+        type="showcase"
+        activeMenu={activeMenu}
+        onClick={onShowcase}
+        icon="🗂️"
+      />
       <MenuButton
         type="map"
         activeMenu={activeMenu}
