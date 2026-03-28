@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { usePlayerPosition } from '@/hooks/usePlayerPosition';
+import { BASE_COORDS } from '@/constants/map';
 
 interface Props {
   onChange: (position: [number, number]) => void;
@@ -7,9 +8,8 @@ interface Props {
 
 export default function PlayerPositionControl({ onChange }: Props) {
   const [useGPS, setUseGPS] = useState(true);
-  const [manualPosition, setManualPosition] = useState<[number, number]>([
-    52.1506, 21.0336,
-  ]);
+  const [manualPosition, setManualPosition] =
+    useState<[number, number]>(BASE_COORDS);
 
   // Получаем реальные геоданные через хук
   const gpsPosition = usePlayerPosition(useGPS, () => {});

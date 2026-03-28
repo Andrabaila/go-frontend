@@ -3,6 +3,11 @@ import { MapContainer, TileLayer } from 'react-leaflet';
 import type { Map as LeafletMap } from 'leaflet';
 import { GoinsLayer, PlayerMarker, QuestPointsLayer } from '@/components';
 import type { Quest } from '@/api/quests';
+import {
+  BASE_COORDS,
+  DEFAULT_ZOOM,
+  QUEST_COMPLETION_NOTICE_MS,
+} from '@/constants/map';
 
 interface Props {
   mapRef: React.RefObject<LeafletMap | null>;
@@ -25,7 +30,7 @@ export default function MapComponent({
   const [mapReady, setMapReady] = useState(false);
   const hasCenteredOnPlayer = useRef(false);
 
-  const defaultCenter = playerPosition ?? [52.1506, 21.0336];
+  const defaultCenter = playerPosition ?? BASE_COORDS;
 
   const handleQuestCompleted = (quest: Quest) => {
     const rewardText = quest.reward
@@ -46,7 +51,7 @@ export default function MapComponent({
     noticeTimerRef.current = window.setTimeout(() => {
       setCompletionNotice(null);
       noticeTimerRef.current = null;
-    }, 3500);
+    }, QUEST_COMPLETION_NOTICE_MS);
   };
 
   useEffect(() => {
@@ -84,7 +89,7 @@ export default function MapComponent({
 
       <MapContainer
         center={defaultCenter}
-        zoom={22}
+        zoom={DEFAULT_ZOOM}
         zoomControl={false}
         style={{ width: '100%', height: '100%' }}
         ref={(mapInstance: LeafletMap) => {

@@ -1,53 +1,80 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { questsApi, type Quest } from '@/api/quests';
+import { questsApi, type QuestShowcaseItem } from '@/api/quests';
 
 interface QuestsShowcaseProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-type QuestStatus = Quest['status'];
-
 type StatusMeta = {
   label: string;
   classes: string;
 };
 
-const statusMeta: Record<QuestStatus, StatusMeta> = {
+const statusMeta: Record<'active' | 'inactive', StatusMeta> = {
   active: {
-    label: 'Активный',
+    label: 'Доступен',
     classes: 'border-emerald-400/40 bg-emerald-500/15 text-emerald-100',
   },
-  completed: {
-    label: 'Завершен',
-    classes: 'border-sky-400/40 bg-sky-500/15 text-sky-100',
-  },
-  pending: {
+  inactive: {
     label: 'Неактивен',
     classes: 'border-amber-400/40 bg-amber-500/15 text-amber-100',
   },
 };
 
-const statusPriority: Record<QuestStatus, number> = {
-  active: 0,
-  pending: 1,
-  completed: 2,
+const difficultyLabels: Record<number, string> = {
+  1: 'Лёгкий',
+  2: 'Средний',
+  3: 'Сложный',
+  4: 'Экспертный',
+  5: 'Экстремальный',
 };
+
+const numberFormatter = new Intl.NumberFormat('ru-RU');
+
+function formatDistance(distance: number) {
+  if (distance >= 1000) {
+    return `${new Intl.NumberFormat('ru-RU', {
+      maximumFractionDigits: 1,
+    }).format(distance / 1000)} км`;
+  }
+  return `${numberFormatter.format(distance)} м`;
+}
+
+function formatDuration(duration: number) {
+  const hours = Math.floor(duration / 60);
+  const minutes = duration % 60;
+
+  if (!hours) return `${duration} мин`;
+  if (!minutes) return `${hours} ч`;
+  return `${hours} ч ${minutes} мин`;
+}
+
+function formatPrice(price: number) {
+  if (price === 0) return 'Бесплатно';
+  return `${numberFormatter.format(price)} ₽`;
+}
+
+function getDifficultyLabel(difficulty: number) {
+  return difficultyLabels[difficulty] ?? `${difficulty}/5`;
+}
 
 export default function QuestsShowcase({
   isOpen,
   onClose,
 }: QuestsShowcaseProps) {
-  const [quests, setQuests] = useState<Quest[]>([]);
+  const [quests, setQuests] = useState<QuestShowcaseItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedQuest, setSelectedQuest] = useState<Quest | null>(null);
+  const [selectedQuest, setSelectedQuest] = useState<QuestShowcaseItem | null>(
+    null
+  );
 
   const loadQuests = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await questsApi.getQuests();
+      const data = await questsApi.getShowcaseQuests();
       setQuests(data);
     } catch (err) {
       console.error('Failed to load quests showcase:', err);
@@ -64,19 +91,16 @@ export default function QuestsShowcase({
 
   const ordered = useMemo(() => {
     return [...quests].sort((a, b) => {
-      const byStatus = statusPriority[a.status] - statusPriority[b.status];
+      const byStatus = Number(b.is_active) - Number(a.is_active);
       if (byStatus !== 0) return byStatus;
-      return a.title.localeCompare(b.title, 'ru');
+      return (a.title ?? '').localeCompare(b.title ?? '', 'ru');
     });
   }, [quests]);
 
   if (!isOpen) return null;
 
   return (
-    <div
-      className="fixed inset-0 z-[1004] bg-slate-950/90"
-      onClick={onClose}
-    >
+    <div className="fixed inset-0 z-[1004] bg-slate-950/90" onClick={onClose}>
       <div
         className="mx-auto flex h-full w-full max-w-6xl flex-col gap-4 p-4 sm:p-6"
         onClick={(event) => event.stopPropagation()}
@@ -112,76 +136,66 @@ export default function QuestsShowcase({
                 <div className="flex flex-wrap items-center gap-2 text-xs text-slate-300">
                   <span
                     className={`rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-wide ${
-                      statusMeta[selectedQuest.status].classes
+                      statusMeta[
+                        selectedQuest.is_active ? 'active' : 'inactive'
+                      ].classes
                     }`}
                   >
-                    {statusMeta[selectedQuest.status].label}
+                    {
+                      statusMeta[
+                        selectedQuest.is_active ? 'active' : 'inactive'
+                      ].label
+                    }
                   </span>
-                  {selectedQuest.playerId && (
+                  {selectedQuest.city && (
                     <span className="rounded-full border border-white/15 px-3 py-1">
-                      Игрок: {selectedQuest.playerId}
+                      {selectedQuest.city}
+                    </span>
+                  )}
+                  {selectedQuest.district && (
+                    <span className="rounded-full border border-white/15 px-3 py-1">
+                      {selectedQuest.district}
                     </span>
                   )}
                 </div>
                 <p className="mt-4 text-sm text-slate-200">
-                  {selectedQuest.description}
+                  {selectedQuest.description || 'Описание пока не добавлено.'}
                 </p>
 
-                {selectedQuest.objectives?.type === 'visit_points' && (
-                  <div className="mt-6 space-y-3 text-sm text-slate-200">
-                    <div className="flex flex-wrap gap-2 text-xs text-slate-300">
-                      <span className="rounded-full border border-white/15 px-3 py-1">
-                        Точек: {selectedQuest.objectives.points.length}
-                      </span>
-                      <span className="rounded-full border border-white/15 px-3 py-1">
-                        Нужно: {selectedQuest.objectives.requiredCount}
-                      </span>
-                      <span className="rounded-full border border-white/15 px-3 py-1">
-                        Радиус: {selectedQuest.objectives.radiusMeters} м
-                      </span>
-                    </div>
-                    <div className="rounded-xl border border-white/10 bg-white/5 p-3">
-                      <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
-                        Маршрут
-                      </p>
-                      <ul className="mt-2 space-y-2 text-sm text-slate-200">
-                        {selectedQuest.objectives.points.map((point, index) => (
-                          <li
-                            key={point.id}
-                            className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2"
-                          >
-                            <span>
-                              {index + 1}. {point.label ?? 'Метка'}
-                            </span>
-                            {point.lat != null && point.lng != null && (
-                              <span className="text-xs text-slate-400">
-                                {point.lat.toFixed(4)}, {point.lng.toFixed(4)}
-                              </span>
-                            )}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                )}
-
-                {selectedQuest.reward && (
-                  <div className="mt-6 rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-slate-200">
+                <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <div className="rounded-xl border border-white/10 bg-white/5 p-4">
                     <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
-                      Награда
+                      Длительность
                     </p>
-                    <p className="mt-2">
-                      {[
-                        selectedQuest.reward.gold != null
-                          ? `${selectedQuest.reward.gold} монет`
-                          : null,
-                        selectedQuest.reward.item ? selectedQuest.reward.item : null,
-                      ]
-                        .filter(Boolean)
-                        .join(', ') || 'Нет данных'}
+                    <p className="mt-2 text-lg font-semibold text-white">
+                      {formatDuration(selectedQuest.duration)}
                     </p>
                   </div>
-                )}
+                  <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                    <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
+                      Дистанция
+                    </p>
+                    <p className="mt-2 text-lg font-semibold text-white">
+                      {formatDistance(selectedQuest.distance)}
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                    <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
+                      Сложность
+                    </p>
+                    <p className="mt-2 text-lg font-semibold text-white">
+                      {getDifficultyLabel(selectedQuest.difficulty)}
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                    <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
+                      Цена
+                    </p>
+                    <p className="mt-2 text-lg font-semibold text-white">
+                      {formatPrice(selectedQuest.price)}
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -230,10 +244,8 @@ export default function QuestsShowcase({
           ) : (
             <div className="grid grid-cols-1 gap-4 pb-6 sm:grid-cols-2 lg:grid-cols-3">
               {ordered.map((quest) => {
-                const meta = statusMeta[quest.status];
-                const objectives = quest.objectives?.type === 'visit_points'
-                  ? quest.objectives
-                  : null;
+                const meta =
+                  statusMeta[quest.is_active ? 'active' : 'inactive'];
                 return (
                   <article
                     key={quest.id}
@@ -242,7 +254,7 @@ export default function QuestsShowcase({
                   >
                     <div className="flex items-start justify-between gap-2">
                       <h3 className="text-lg font-semibold leading-snug">
-                        {quest.title}
+                        {quest.title || 'Квест без названия'}
                       </h3>
                       <span
                         className={`rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-wide ${
@@ -253,26 +265,54 @@ export default function QuestsShowcase({
                       </span>
                     </div>
                     <p className="text-sm text-slate-200">
-                      {quest.description}
+                      {quest.description || 'Описание пока не добавлено.'}
                     </p>
-                    {objectives && (
-                      <div className="mt-auto flex flex-wrap items-center gap-2 text-xs text-slate-300">
+                    <div className="mt-auto flex flex-wrap items-center gap-2 text-xs text-slate-300">
+                      {quest.city && (
                         <span className="rounded-full border border-white/15 px-3 py-1">
-                          Точек: {objectives.points.length}
+                          {quest.city}
                         </span>
+                      )}
+                      {quest.district && (
                         <span className="rounded-full border border-white/15 px-3 py-1">
-                          Нужно: {objectives.requiredCount}
+                          {quest.district}
                         </span>
-                        <span className="rounded-full border border-white/15 px-3 py-1">
-                          Радиус: {objectives.radiusMeters} м
-                        </span>
+                      )}
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-xs text-slate-200">
+                      <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+                        <p className="text-[10px] uppercase tracking-wide text-slate-400">
+                          Длительность
+                        </p>
+                        <p className="mt-1 font-semibold">
+                          {formatDuration(quest.duration)}
+                        </p>
                       </div>
-                    )}
-                    {!objectives && (
-                      <div className="mt-auto text-xs text-slate-400">
-                        Без гео-задач
+                      <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+                        <p className="text-[10px] uppercase tracking-wide text-slate-400">
+                          Дистанция
+                        </p>
+                        <p className="mt-1 font-semibold">
+                          {formatDistance(quest.distance)}
+                        </p>
                       </div>
-                    )}
+                      <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+                        <p className="text-[10px] uppercase tracking-wide text-slate-400">
+                          Сложность
+                        </p>
+                        <p className="mt-1 font-semibold">
+                          {getDifficultyLabel(quest.difficulty)}
+                        </p>
+                      </div>
+                      <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+                        <p className="text-[10px] uppercase tracking-wide text-slate-400">
+                          Цена
+                        </p>
+                        <p className="mt-1 font-semibold">
+                          {formatPrice(quest.price)}
+                        </p>
+                      </div>
+                    </div>
                   </article>
                 );
               })}
