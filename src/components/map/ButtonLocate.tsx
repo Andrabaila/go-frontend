@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react';
 import { LocateFixed } from 'lucide-react';
 import type { Map as LeafletMap } from 'leaflet';
+import {
+  GEOLOCATION_TIMEOUT_MS,
+  LOCATE_BUTTON_SHOW_DISTANCE_METERS,
+  PLAYER_FOCUS_ZOOM,
+} from '@/constants/map';
 
 interface Props {
   mapRef: React.RefObject<LeafletMap | null>;
@@ -29,7 +34,11 @@ export default function ButtonLocate({ mapRef }: Props) {
         setError('⚠️ Unable to determine location.');
         setShouldShow(true);
       },
-      { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
+      {
+        enableHighAccuracy: true,
+        maximumAge: 0,
+        timeout: GEOLOCATION_TIMEOUT_MS,
+      }
     );
 
     return () => {
@@ -46,7 +55,7 @@ export default function ButtonLocate({ mapRef }: Props) {
     const checkPosition = () => {
       const center = map.getCenter();
       const distance = map.distance(userLocation, [center.lat, center.lng]);
-      setShouldShow(distance > 50);
+      setShouldShow(distance > LOCATE_BUTTON_SHOW_DISTANCE_METERS);
     };
 
     map.on('moveend', checkPosition);
@@ -69,7 +78,7 @@ export default function ButtonLocate({ mapRef }: Props) {
     // ⚡️ instantly move to the last known position
     const map = mapRef.current;
     if (userLocation && map) {
-      map.setView(userLocation, 16);
+      map.setView(userLocation, PLAYER_FOCUS_ZOOM);
     }
 
     // ⚙️ update coordinates with a fast timeout
@@ -79,7 +88,7 @@ export default function ButtonLocate({ mapRef }: Props) {
         const coords: [number, number] = [latitude, longitude];
         setUserLocation(coords);
         if (mapRef.current) {
-          mapRef.current.setView(coords, 16);
+          mapRef.current.setView(coords, PLAYER_FOCUS_ZOOM);
         }
         setLoading(false);
       },
@@ -90,7 +99,7 @@ export default function ButtonLocate({ mapRef }: Props) {
       {
         enableHighAccuracy: true,
         maximumAge: 0,
-        timeout: 10000,
+        timeout: GEOLOCATION_TIMEOUT_MS,
       }
     );
   };

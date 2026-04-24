@@ -28,10 +28,30 @@ export interface Quest {
   };
 }
 
+export interface QuestShowcaseItem {
+  id: string;
+  duration: number;
+  distance: number;
+  difficulty: number;
+  price: number;
+  is_active: boolean;
+  title?: string;
+  district?: string;
+  city?: string;
+  description?: string;
+}
+
 export const questsApi = {
   async getQuests(playerId?: string): Promise<Quest[]> {
     const params = playerId ? { playerId } : {};
     const response = await axios.get(`${API_BASE_URL}/quests`, { params });
+    return response.data;
+  },
+
+  async getShowcaseQuests(lang = 'ru'): Promise<QuestShowcaseItem[]> {
+    const response = await axios.get(`${API_BASE_URL}/admin/api/quests`, {
+      params: { lang },
+    });
     return response.data;
   },
 
