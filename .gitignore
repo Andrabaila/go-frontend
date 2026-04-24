@@ -2,6 +2,7 @@
 /certs
 cert
 certs
+.codex
 
 # Logs
 logs

@@ -3,6 +3,7 @@ import 'leaflet/dist/leaflet.css';
 import { useRef, useState } from 'react';
 import type { Map as LeafletMap } from 'leaflet';
 import {
+  AboutModal,
   MapComponent,
   TopUI,
   BackpackBottomSheet,
@@ -14,11 +15,18 @@ import {
   QuestsShowcase,
 } from '@/components';
 import { usePlayerPosition } from '@/hooks/usePlayerPosition';
-type MainMenuItem = 'showcase' | 'map' | 'quests' | 'inventory' | 'profile' | null;
+type MainMenuItem =
+  | 'showcase'
+  | 'map'
+  | 'quests'
+  | 'inventory'
+  | 'profile'
+  | null;
 
 function App() {
   const mapRef = useRef<LeafletMap | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isAboutOpen, setAboutOpen] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [playerPosition, setPlayerPosition] = useState<[number, number] | null>(
     () => {
@@ -51,7 +59,7 @@ function App() {
         isOpen={activeMenu === 'inventory'}
         onClose={() => setActiveMenu(null)}
       />
-      <TopUI />
+      <TopUI onOpenAbout={() => setAboutOpen(true)} />
       <MainMenu
         activeMenu={activeMenu}
         onShowcase={() => toggleMenu('showcase')}
@@ -73,6 +81,7 @@ function App() {
           setModalOpen(false);
         }}
       />
+      <AboutModal isOpen={isAboutOpen} onClose={() => setAboutOpen(false)} />
       <MapComponent
         mapRef={mapRef}
         followPlayer={false}
