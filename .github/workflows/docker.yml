@@ -32,6 +32,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Prepare build metadata
+        id: meta
+        run: |
+          echo "built_at=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> "$GITHUB_OUTPUT"
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -50,6 +55,8 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/go-frontend:latest
           build-args: |
             VITE_API_URL=${{ vars.VITE_API_URL }}
+            VITE_APP_DEPLOYED_AT=${{ steps.meta.outputs.built_at }}
+            VITE_APP_COMMIT=${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
