@@ -51,6 +51,7 @@ export const LoginRegisterModal = ({
       } else {
         const data: RegisterRequest = { email, password };
         await registerUser(data);
+        await loginUser(data);
         onLoginSuccess?.(email);
       }
       setEmail('');

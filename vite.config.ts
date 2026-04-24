@@ -17,7 +17,9 @@ const getPackageVersion = () => {
 };
 
 const getCommitSha = () => {
-  if (process.env.VITE_APP_COMMIT) return process.env.VITE_APP_COMMIT;
+  if (process.env.VITE_APP_COMMIT) {
+    return process.env.VITE_APP_COMMIT.slice(0, 7);
+  }
 
   try {
     return execSync('git rev-parse --short HEAD', {

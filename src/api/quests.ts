@@ -1,6 +1,4 @@
-import axios from 'axios';
-
-const API_BASE_URL = import.meta.env.VITE_API_URL;
+import { apiClient } from '@/api/client';
 
 export interface Quest {
   id: string;
@@ -44,12 +42,12 @@ export interface QuestShowcaseItem {
 export const questsApi = {
   async getQuests(playerId?: string): Promise<Quest[]> {
     const params = playerId ? { playerId } : {};
-    const response = await axios.get(`${API_BASE_URL}/quests`, { params });
+    const response = await apiClient.get('/quests', { params });
     return response.data;
   },
 
   async getShowcaseQuests(lang = 'ru'): Promise<QuestShowcaseItem[]> {
-    const response = await axios.get(`${API_BASE_URL}/admin/api/quests`, {
+    const response = await apiClient.get('/admin/api/quests', {
       params: { lang },
     });
     return response.data;
@@ -60,7 +58,7 @@ export const questsApi = {
     description: string,
     playerId?: string
   ): Promise<Quest> {
-    const response = await axios.post(`${API_BASE_URL}/quests`, {
+    const response = await apiClient.post('/quests', {
       title,
       description,
       playerId,
@@ -72,7 +70,7 @@ export const questsApi = {
     id: string,
     status: 'active' | 'completed' | 'pending'
   ): Promise<Quest> {
-    const response = await axios.put(`${API_BASE_URL}/quests/${id}/status`, {
+    const response = await apiClient.put(`/quests/${id}/status`, {
       status,
     });
     return response.data;
@@ -82,13 +80,13 @@ export const questsApi = {
     id: string,
     visitedPointIds: string[]
   ): Promise<Quest> {
-    const response = await axios.put(`${API_BASE_URL}/quests/${id}/progress`, {
+    const response = await apiClient.put(`/quests/${id}/progress`, {
       visitedPointIds,
     });
     return response.data;
   },
 
   async deleteQuest(id: string): Promise<void> {
-    await axios.delete(`${API_BASE_URL}/quests/${id}`);
+    await apiClient.delete(`/quests/${id}`);
   },
 };

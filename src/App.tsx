@@ -2,6 +2,7 @@ import '@/assets/styles/global.css';
 import 'leaflet/dist/leaflet.css';
 import { useRef, useState } from 'react';
 import type { Map as LeafletMap } from 'leaflet';
+import { getStoredUserEmail } from '@/api/auth';
 import {
   AboutModal,
   MapComponent,
@@ -27,7 +28,9 @@ function App() {
   const mapRef = useRef<LeafletMap | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
   const [isAboutOpen, setAboutOpen] = useState(false);
-  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [userEmail, setUserEmail] = useState<string | null>(() =>
+    getStoredUserEmail()
+  );
   const [playerPosition, setPlayerPosition] = useState<[number, number] | null>(
     () => {
       const stored = localStorage.getItem('playerPosition');
