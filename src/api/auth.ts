@@ -1,7 +1,6 @@
-import axios from 'axios';
 import type { LoginRequest, RegisterRequest } from '@/types/auth';
+import { apiClient } from '@/api/client';
 
-const API_URL = import.meta.env.VITE_API_URL;
 const AUTH_TOKEN_KEY = 'token';
 const AUTH_EMAIL_KEY = 'userEmail';
 
@@ -66,7 +65,7 @@ export const getStoredUserEmail = () => {
 export const loginUser = async (
   data: LoginRequest
 ): Promise<{ access_token: string }> => {
-  const response = await axios.post(`${API_URL}/auth/login`, data, {
+  const response = await apiClient.post('/auth/login', data, {
     headers: {
       'Content-Type': 'application/json',
     },
@@ -78,7 +77,7 @@ export const loginUser = async (
 export const registerUser = async (
   data: RegisterRequest
 ): Promise<{ id: number; email: string }> => {
-  const response = await axios.post(`${API_URL}/auth/register`, data, {
+  const response = await apiClient.post('/auth/register', data, {
     headers: {
       'Content-Type': 'application/json',
     },
