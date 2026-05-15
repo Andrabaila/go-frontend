@@ -37,7 +37,7 @@ export default function StatusBar() {
             maximumFractionDigits: 0,
           })}
         </span>{' '}
-        км²
+        km²
       </div>
 
       <div>

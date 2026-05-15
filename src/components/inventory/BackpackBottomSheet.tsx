@@ -8,12 +8,6 @@ interface Props {
   onClose: () => void;
 }
 
-/**
- * Нижний sheet для отображения инвентаря игрока.
- * Загружает предметы из localStorage при открытии.
- * @param isOpen - Флаг видимости sheet
- * @param onClose - Функция закрытия sheet
- */
 export default function BackpackBottomSheet({ isOpen, onClose }: Props) {
   const [items, setItems] = useState<BackpackItem[]>([]);
 
@@ -24,7 +18,7 @@ export default function BackpackBottomSheet({ isOpen, onClose }: Props) {
   }, [isOpen]);
 
   const handleRemove = (name: string) => {
-    const confirmed = window.confirm(`Выбросить "${name}" из рюкзака?`);
+    const confirmed = window.confirm(`Remove "${name}" from your backpack?`);
     if (!confirmed) return;
 
     removeFromBackpack(name);
@@ -34,29 +28,34 @@ export default function BackpackBottomSheet({ isOpen, onClose }: Props) {
   if (!isOpen) return null;
 
   return (
-    <>
-      {/* затемнение */}
-      <div onClick={onClose} className="fixed inset-0 z-[2000] bg-black/40" />
-
-      {/* bottom sheet */}
+    <div className="fixed inset-0 z-[1004] bg-slate-950/90" onClick={onClose}>
       <div
-        className="fixed bottom-0 left-0 right-0 z-[2001] max-h-[85vh] min-h-[40vh] overflow-y-auto rounded-md bg-gray-600/80 p-4 text-white"
+        className="mx-auto flex h-full w-full max-w-6xl flex-col gap-4 p-4 sm:p-6"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* drag handle */}
-        <div className="mx-auto mb-3 h-4 w-10 rounded-sm bg-gray-300" />
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <p className="text-xs uppercase tracking-[0.3em] text-slate-400">
+              Inventory
+            </p>
+            <h2 className="text-2xl font-semibold text-white sm:text-3xl">
+              Backpack
+            </h2>
+            <p className="mt-1 text-sm text-slate-300">Total: {items.length}</p>
+          </div>
+          <button
+            onClick={onClose}
+            className="rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/10"
+            aria-label="Close backpack"
+          >
+            Close
+          </button>
+        </div>
 
-        <h2 style={{ marginBottom: '12px' }}>Рюкзак</h2>
-
-        <BackpackList items={items} onRemove={handleRemove} />
-
-        <button
-          onClick={onClose}
-          className="mt-3 w-full cursor-pointer rounded-lg bg-gray-600 p-2.5 text-white"
-        >
-          Закрыть
-        </button>
+        <div className="min-h-0 flex-1 overflow-y-auto">
+          <BackpackList items={items} onRemove={handleRemove} />
+        </div>
       </div>
-    </>
+    </div>
   );
 }

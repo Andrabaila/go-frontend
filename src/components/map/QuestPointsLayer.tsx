@@ -230,16 +230,16 @@ export default function QuestPointsLayer({
             <Popup>
               <div className="text-sm">
                 <div className="font-semibold">{point.questTitle}</div>
-                <div className="text-gray-600">{point.label ?? 'Метка'}</div>
+                <div className="text-gray-600">{point.label ?? 'Marker'}</div>
                 <div className="mt-1 text-xs text-gray-500">
-                  Прогресс: {progressText}
+                  Progress: {progressText}
                 </div>
                 <div className="text-xs text-gray-500">
                   {isVisited
-                    ? 'Метка засчитана'
+                    ? 'Marker counted'
                     : isActive
-                      ? `Текущая цель: подойди на ${point.radiusMeters} м`
-                      : 'Сначала пройди предыдущую метку'}
+                      ? `Current target: get within ${point.radiusMeters} m`
+                      : 'Complete the previous marker first'}
                 </div>
               </div>
             </Popup>

@@ -37,7 +37,7 @@ export default function MapComponent({
   const handleQuestCompleted = (quest: Quest) => {
     const rewardText = quest.reward
       ? [
-          quest.reward.gold != null ? `${quest.reward.gold} монет` : null,
+          quest.reward.gold != null ? `${quest.reward.gold} coins` : null,
           quest.reward.item ? quest.reward.item : null,
         ]
           .filter(Boolean)
@@ -79,11 +79,11 @@ export default function MapComponent({
       {completionNotice && (
         <div className="pointer-events-none absolute left-1/2 top-4 z-[1001] w-[90%] max-w-sm -translate-x-1/2 animate-bounce rounded-lg border border-green-300 bg-green-50 px-4 py-3 text-sm text-green-800 shadow-lg">
           <div className="font-semibold">
-            Квест завершён: {completionNotice.title}
+            Quest completed: {completionNotice.title}
           </div>
           {completionNotice.rewardText && (
             <div className="text-xs text-green-700">
-              Награда: {completionNotice.rewardText}
+              Reward: {completionNotice.rewardText}
             </div>
           )}
         </div>

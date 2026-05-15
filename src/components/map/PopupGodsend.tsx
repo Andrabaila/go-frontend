@@ -21,7 +21,6 @@ export default function PopupGodsend({
   };
 
   const handleTake = () => {
-    // добавляем в рюкзак
     addToBackpack({
       id: id,
       name: name,
@@ -38,19 +37,19 @@ export default function PopupGodsend({
       <p className="text-center text-sm">New godsend!</p>
       <CircleDollarSign size={48} color="green" />
       <p className="text-center font-bold">{name}</p>
-      <p className="text-sm">Вес: {weight}</p>
+      <p className="text-sm">Weight: {weight}</p>
       <div className="mt-2 flex gap-2">
         <button
           onClick={handleTake}
           className="rounded bg-green-600 px-3 py-1 text-white hover:bg-green-700"
         >
-          Взять
+          Take
         </button>
         <button
           onClick={handleLeave}
           className="rounded bg-gray-300 px-3 py-1 text-white hover:bg-gray-400"
         >
-          Оставить
+          Leave
         </button>
       </div>
     </div>

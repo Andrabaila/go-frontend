@@ -5,6 +5,6 @@ export interface BackpackItem {
 }
 
 export const backpackItems: BackpackItem[] = [
-  { id: '1', name: 'Старинная монета', description: 'Редкая монета' },
-  { id: '2', name: 'Зелье здоровья', description: 'Восстанавливает 50 HP' },
+  { id: '1', name: 'Ancient Coin', description: 'Rare coin' },
+  { id: '2', name: 'Health Potion', description: 'Restores 50 HP' },
 ];

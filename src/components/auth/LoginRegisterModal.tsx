@@ -59,7 +59,7 @@ export const LoginRegisterModal = ({
     } catch (err) {
       const apiError = err as ApiError;
       const message =
-        apiError.response?.data?.message ?? 'Не удалось выполнить запрос';
+        apiError.response?.data?.message ?? 'Unable to complete the request';
       setError(message);
     }
   };
@@ -68,7 +68,7 @@ export const LoginRegisterModal = ({
     <div className="z-5000 fixed inset-0 flex items-center justify-center bg-black/50">
       <div className="relative w-80 rounded-xl bg-white p-6">
         <h2 className="mb-4 text-center text-xl font-bold">
-          {mode === 'login' ? 'Войти' : 'Регистрация'}
+          {mode === 'login' ? 'Sign in' : 'Register'}
         </h2>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
@@ -83,7 +83,7 @@ export const LoginRegisterModal = ({
 
           <input
             type="password"
-            placeholder="Пароль"
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -96,31 +96,31 @@ export const LoginRegisterModal = ({
             type="submit"
             className="rounded bg-blue-500 p-2 text-white transition hover:bg-blue-600"
           >
-            {mode === 'login' ? 'Войти' : 'Зарегистрироваться'}
+            {mode === 'login' ? 'Sign in' : 'Register'}
           </button>
         </form>
 
         <p className="mt-3 text-center text-sm">
           {mode === 'login' ? (
             <>
-              Нет аккаунта?{' '}
+              No account yet?{' '}
               <button
                 type="button"
                 className="text-blue-500 underline"
                 onClick={() => setMode('register')}
               >
-                Регистрация
+                Register
               </button>
             </>
           ) : (
             <>
-              Уже есть аккаунт?{' '}
+              Already have an account?{' '}
               <button
                 type="button"
                 className="text-blue-500 underline"
                 onClick={() => setMode('login')}
               >
-                Войти
+                Sign in
               </button>
             </>
           )}
