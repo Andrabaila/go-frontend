@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Marker, Popup } from 'react-leaflet';
-import { questsApi, type Quest } from '@/api/quests';
+import { questsApi, type Quest, USER_QUESTS_UPDATED_EVENT } from '@/api/quests';
 import getDistanceMeters from '@/components/map/utils/getDistanceMeters';
 import {
   questActiveIcon,
@@ -22,6 +22,7 @@ type QuestPoint = {
 
 interface Props {
   playerPosition: [number, number] | null;
+  isAuthenticated: boolean;
   onQuestCompleted?: (quest: Quest) => void;
 }
 
@@ -29,28 +30,62 @@ type VisitedByQuest = Record<string, Record<string, true>>;
 
 export default function QuestPointsLayer({
   playerPosition,
+  isAuthenticated,
   onQuestCompleted,
 }: Props) {
   const [quests, setQuests] = useState<Quest[]>([]);
   const [visited, setVisited] = useState<VisitedByQuest>({});
   const lastSyncedRef = useRef<Record<string, string>>({});
   const completedNotifiedRef = useRef<Record<string, true>>({});
+  const completedSyncRef = useRef<Record<string, true>>({});
 
   useEffect(() => {
+    if (!isAuthenticated) {
+      setQuests([]);
+      setVisited({});
+      lastSyncedRef.current = {};
+      completedNotifiedRef.current = {};
+      completedSyncRef.current = {};
+      return;
+    }
+
     let alive = true;
     const load = async () => {
       try {
-        const data = await questsApi.getQuests();
-        if (alive) setQuests(data);
+        const data = await questsApi.getMyQuests();
+        if (!alive) return;
+        setQuests(data);
+        setVisited(() => {
+          const next: VisitedByQuest = {};
+          data.forEach((quest) => {
+            const ids = quest.progress?.visitedPointIds ?? [];
+            if (ids.length === 0) return;
+            next[quest.id] = ids.reduce<Record<string, true>>((acc, id) => {
+              acc[id] = true;
+              return acc;
+            }, {});
+          });
+          return next;
+        });
       } catch (error) {
         console.error('Failed to load quest points:', error);
       }
     };
-    load();
+
+    void load();
+    const handleUserQuestsUpdated = () => {
+      void load();
+    };
+    window.addEventListener(USER_QUESTS_UPDATED_EVENT, handleUserQuestsUpdated);
+
     return () => {
       alive = false;
+      window.removeEventListener(
+        USER_QUESTS_UPDATED_EVENT,
+        handleUserQuestsUpdated
+      );
     };
-  }, []);
+  }, [isAuthenticated]);
 
   const points = useMemo<QuestPoint[]>(() => {
     const result: QuestPoint[] = [];
@@ -87,21 +122,6 @@ export default function QuestPointsLayer({
   }, [points]);
 
   useEffect(() => {
-    if (quests.length === 0) return;
-    const initial: VisitedByQuest = {};
-    quests.forEach((quest) => {
-      const ids = quest.progress?.visitedPointIds ?? [];
-      if (ids.length === 0) return;
-      const set: Record<string, true> = {};
-      ids.forEach((id) => {
-        set[id] = true;
-      });
-      initial[quest.id] = set;
-    });
-    setVisited((prev) => (Object.keys(prev).length === 0 ? initial : prev));
-  }, [quests]);
-
-  useEffect(() => {
     if (!playerPosition || points.length === 0) return;
     setVisited((prev) => {
       let changed = false;
@@ -129,17 +149,18 @@ export default function QuestPointsLayer({
   }, [playerPosition, orderedPointsByQuest, points.length]);
 
   useEffect(() => {
+    if (!isAuthenticated) return;
     const questIds = new Set(points.map((p) => p.questId));
     questIds.forEach((questId) => {
       const ids = Object.keys(visited[questId] ?? {}).sort();
       const signature = ids.join('|');
       if (lastSyncedRef.current[questId] === signature) return;
       lastSyncedRef.current[questId] = signature;
-      void questsApi.updateQuestProgress(questId, ids).catch((error) => {
+      void questsApi.updateMyQuestProgress(questId, ids).catch((error) => {
         console.error('Failed to save quest progress:', error);
       });
     });
-  }, [points, visited]);
+  }, [isAuthenticated, points, visited]);
 
   useEffect(() => {
     quests.forEach((quest) => {
@@ -159,6 +180,15 @@ export default function QuestPointsLayer({
       if (visitedCount < quest.objectives.requiredCount) return;
       if (completedNotifiedRef.current[quest.id]) return;
       completedNotifiedRef.current[quest.id] = true;
+      if (!completedSyncRef.current[quest.id] && quest.status !== 'completed') {
+        completedSyncRef.current[quest.id] = true;
+        void questsApi
+          .updateMyQuestStatus(quest.id, 'completed')
+          .catch((error) => {
+            console.error('Failed to complete quest:', error);
+            completedSyncRef.current[quest.id] = false;
+          });
+      }
       onQuestCompleted(quest);
     });
   }, [onQuestCompleted, points, quests, visited]);

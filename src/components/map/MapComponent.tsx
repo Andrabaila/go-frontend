@@ -13,12 +13,14 @@ interface Props {
   mapRef: React.RefObject<LeafletMap | null>;
   followPlayer: boolean;
   playerPosition: [number, number] | null;
+  isAuthenticated: boolean;
 }
 
 export default function MapComponent({
   mapRef,
   followPlayer,
   playerPosition,
+  isAuthenticated,
 }: Props) {
   const [completionNotice, setCompletionNotice] = useState<{
     title: string;
@@ -103,6 +105,7 @@ export default function MapComponent({
         <GoinsLayer playerPosition={playerPosition} />
         <QuestPointsLayer
           playerPosition={playerPosition}
+          isAuthenticated={isAuthenticated}
           onQuestCompleted={handleQuestCompleted}
         />
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />

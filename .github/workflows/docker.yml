@@ -74,13 +74,29 @@ jobs:
       - name: Deploy to server
         run: |
           ssh -o StrictHostKeyChecking=no ya@100.113.39.97 "
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/go-frontend:latest &&
-            docker stop go-frontend || true &&
-            docker rm go-frontend || true &&
+            set -e
+            image='${{ secrets.DOCKERHUB_USERNAME }}/go-frontend:latest'
+
+            for attempt in 1 2 3; do
+              if docker pull \"\$image\"; then
+                break
+              fi
+
+              if [ \"\$attempt\" -eq 3 ]; then
+                echo 'Failed to pull image after 3 attempts'
+                exit 1
+              fi
+
+              echo \"Docker pull failed, retrying in 10 seconds...\"
+              sleep 10
+            done
+
+            docker stop go-frontend || true
+            docker rm go-frontend || true
             docker run -d \
               --env-file /home/ya/.env \
               --name go-frontend \
               --restart always \
               -p 80:80 \
-              ${{ secrets.DOCKERHUB_USERNAME }}/go-frontend:latest
+              \"\$image\"
           "
