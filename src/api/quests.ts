@@ -1,5 +1,7 @@
 import { apiClient } from '@/api/client';
 
+export const USER_QUESTS_UPDATED_EVENT = 'user-quests-updated';
+
 export interface Quest {
   id: string;
   title: string;
@@ -39,6 +41,10 @@ export interface QuestShowcaseItem {
   description?: string;
 }
 
+export const notifyUserQuestsUpdated = () => {
+  window.dispatchEvent(new CustomEvent(USER_QUESTS_UPDATED_EVENT));
+};
+
 export const questsApi = {
   async getQuests(playerId?: string): Promise<Quest[]> {
     const params = playerId ? { playerId } : {};
@@ -50,6 +56,17 @@ export const questsApi = {
     const response = await apiClient.get('/admin/api/quests', {
       params: { lang },
     });
+    return response.data;
+  },
+
+  async getMyQuests(): Promise<Quest[]> {
+    const response = await apiClient.get('/me/quests');
+    return response.data;
+  },
+
+  async activateQuest(questId: string): Promise<Quest> {
+    const response = await apiClient.post(`/me/quests/${questId}/activate`);
+    notifyUserQuestsUpdated();
     return response.data;
   },
 
@@ -83,6 +100,28 @@ export const questsApi = {
     const response = await apiClient.put(`/quests/${id}/progress`, {
       visitedPointIds,
     });
+    return response.data;
+  },
+
+  async updateMyQuestProgress(
+    questId: string,
+    visitedPointIds: string[]
+  ): Promise<Quest> {
+    const response = await apiClient.put(`/me/quests/${questId}/progress`, {
+      visitedPointIds,
+    });
+    notifyUserQuestsUpdated();
+    return response.data;
+  },
+
+  async updateMyQuestStatus(
+    questId: string,
+    status: 'active' | 'completed' | 'pending'
+  ): Promise<Quest> {
+    const response = await apiClient.put(`/me/quests/${questId}/status`, {
+      status,
+    });
+    notifyUserQuestsUpdated();
     return response.data;
   },
 

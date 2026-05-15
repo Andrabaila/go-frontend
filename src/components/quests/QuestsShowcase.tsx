@@ -4,6 +4,7 @@ import { questsApi, type QuestShowcaseItem } from '@/api/quests';
 interface QuestsShowcaseProps {
   isOpen: boolean;
   onClose: () => void;
+  isAuthenticated: boolean;
 }
 
 type StatusMeta = {
@@ -62,11 +63,19 @@ function getDifficultyLabel(difficulty: number) {
 export default function QuestsShowcase({
   isOpen,
   onClose,
+  isAuthenticated,
 }: QuestsShowcaseProps) {
   const [quests, setQuests] = useState<QuestShowcaseItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedQuest, setSelectedQuest] = useState<QuestShowcaseItem | null>(
+    null
+  );
+  const [activationError, setActivationError] = useState<string | null>(null);
+  const [activationMessage, setActivationMessage] = useState<string | null>(
+    null
+  );
+  const [activatingQuestId, setActivatingQuestId] = useState<string | null>(
     null
   );
 
@@ -89,6 +98,14 @@ export default function QuestsShowcase({
     void loadQuests();
   }, [isOpen, loadQuests]);
 
+  useEffect(() => {
+    if (!selectedQuest) {
+      setActivationError(null);
+      setActivationMessage(null);
+      setActivatingQuestId(null);
+    }
+  }, [selectedQuest]);
+
   const ordered = useMemo(() => {
     return [...quests].sort((a, b) => {
       const byStatus = Number(b.is_active) - Number(a.is_active);
@@ -96,6 +113,21 @@ export default function QuestsShowcase({
       return (a.title ?? '').localeCompare(b.title ?? '', 'en');
     });
   }, [quests]);
+
+  const handleActivateQuest = useCallback(async (questId: string) => {
+    setActivationError(null);
+    setActivationMessage(null);
+    setActivatingQuestId(questId);
+    try {
+      await questsApi.activateQuest(questId);
+      setActivationMessage('Квест добавлен в список ваших активных квестов.');
+    } catch (err) {
+      console.error('Failed to activate quest:', err);
+      setActivationError('Не удалось добавить квест. Попробуйте ещё раз.');
+    } finally {
+      setActivatingQuestId(null);
+    }
+  }, []);
 
   if (!isOpen) return null;
 
@@ -161,6 +193,44 @@ export default function QuestsShowcase({
                 <p className="mt-4 text-sm text-slate-200">
                   {selectedQuest.description || 'Description coming soon.'}
                 </p>
+
+                <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                      <p className="text-sm font-semibold text-white">
+                        {isAuthenticated
+                          ? 'Добавить квест в мои активные'
+                          : 'Войдите, чтобы активировать квест'}
+                      </p>
+                      {activationMessage && (
+                        <p className="mt-1 text-xs text-emerald-300">
+                          {activationMessage}
+                        </p>
+                      )}
+                      {activationError && (
+                        <p className="mt-1 text-xs text-rose-300">
+                          {activationError}
+                        </p>
+                      )}
+                    </div>
+                    <button
+                      type="button"
+                      disabled={
+                        !isAuthenticated ||
+                        !selectedQuest.is_active ||
+                        activatingQuestId === selectedQuest.id
+                      }
+                      onClick={() => void handleActivateQuest(selectedQuest.id)}
+                      className="rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:bg-slate-600"
+                    >
+                      {activatingQuestId === selectedQuest.id
+                        ? 'Добавляем...'
+                        : selectedQuest.is_active
+                          ? 'Start Quest'
+                          : 'Недоступно'}
+                    </button>
+                  </div>
+                </div>
 
                 <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <div className="rounded-xl border border-white/10 bg-white/5 p-4">

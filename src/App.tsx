@@ -38,6 +38,7 @@ function App() {
     }
   );
   const [activeMenu, setActiveMenu] = useState<MainMenuItem>(null);
+  const isAuthenticated = Boolean(userEmail);
   const toggleMenu = (menu: MainMenuItem) => {
     setActiveMenu((prev) => (prev === menu ? null : menu));
   };
@@ -53,10 +54,12 @@ function App() {
       <QuestsShowcase
         isOpen={activeMenu === 'showcase'}
         onClose={() => setActiveMenu(null)}
+        isAuthenticated={isAuthenticated}
       />
       <QuestsList
         isOpen={activeMenu === 'quests'}
         onClose={() => setActiveMenu(null)}
+        isAuthenticated={isAuthenticated}
       />
       <BackpackBottomSheet
         isOpen={activeMenu === 'inventory'}
@@ -89,6 +92,7 @@ function App() {
         mapRef={mapRef}
         followPlayer={false}
         playerPosition={playerPosition}
+        isAuthenticated={isAuthenticated}
       />
     </div>
   );

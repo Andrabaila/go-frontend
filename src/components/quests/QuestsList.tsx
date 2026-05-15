@@ -1,9 +1,14 @@
-import { useState, useEffect } from 'react';
-import { questsApi, type Quest } from '../../api/quests';
+import { useCallback, useEffect, useState } from 'react';
+import {
+  questsApi,
+  type Quest,
+  USER_QUESTS_UPDATED_EVENT,
+} from '../../api/quests';
 
 interface QuestsListProps {
   isOpen: boolean;
   onClose: () => void;
+  isAuthenticated: boolean;
 }
 
 /**
@@ -12,27 +17,51 @@ interface QuestsListProps {
  * @param isOpen - Флаг видимости модального окна
  * @param onClose - Функция закрытия модального окна
  */
-export default function QuestsList({ isOpen, onClose }: QuestsListProps) {
+export default function QuestsList({
+  isOpen,
+  onClose,
+  isAuthenticated,
+}: QuestsListProps) {
   const [quests, setQuests] = useState<Quest[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (isOpen) {
-      loadQuests();
-    }
-  }, [isOpen]);
-
-  const loadQuests = async () => {
+  const loadQuests = useCallback(async () => {
     setLoading(true);
+    setError(null);
     try {
-      const data = await questsApi.getQuests();
+      const data = await questsApi.getMyQuests();
       setQuests(data);
     } catch (error) {
       console.error('Failed to load quests:', error);
+      setError('Не удалось загрузить ваши квесты');
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    if (!isAuthenticated) {
+      setQuests([]);
+      setError(null);
+      return;
+    }
+
+    void loadQuests();
+
+    const handleUserQuestsUpdated = () => {
+      void loadQuests();
+    };
+
+    window.addEventListener(USER_QUESTS_UPDATED_EVENT, handleUserQuestsUpdated);
+    return () => {
+      window.removeEventListener(
+        USER_QUESTS_UPDATED_EVENT,
+        handleUserQuestsUpdated
+      );
+    };
+  }, [isAuthenticated, isOpen, loadQuests]);
 
   if (!isOpen) return null;
 
@@ -45,10 +74,17 @@ export default function QuestsList({ isOpen, onClose }: QuestsListProps) {
         className="w-full max-w-md rounded-t-lg bg-white p-4 shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="mb-4 text-lg font-bold">Квесты</h2>
+        <h2 className="mb-4 text-lg font-bold">Мои квесты</h2>
+        {!isAuthenticated ? (
+          <p className="text-sm text-gray-600">
+            Войдите в аккаунт, чтобы увидеть активные квесты.
+          </p>
+        ) : error ? (
+          <p className="text-sm text-red-600">{error}</p>
+        ) : null}
         {loading ? (
           <p>Loading...</p>
-        ) : quests.length === 0 ? (
+        ) : !isAuthenticated ? null : quests.length === 0 ? (
           <p className="text-sm text-gray-600">Нет активных квестов</p>
         ) : (
           <ul className="space-y-2">
