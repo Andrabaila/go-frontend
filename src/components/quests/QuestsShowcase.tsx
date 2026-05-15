@@ -120,10 +120,10 @@ export default function QuestsShowcase({
     setActivatingQuestId(questId);
     try {
       await questsApi.activateQuest(questId);
-      setActivationMessage('Квест добавлен в список ваших активных квестов.');
+      setActivationMessage('Quest added to your active quests.');
     } catch (err) {
       console.error('Failed to activate quest:', err);
-      setActivationError('Не удалось добавить квест. Попробуйте ещё раз.');
+      setActivationError('Failed to add the quest. Try again.');
     } finally {
       setActivatingQuestId(null);
     }
@@ -199,8 +199,8 @@ export default function QuestsShowcase({
                     <div>
                       <p className="text-sm font-semibold text-white">
                         {isAuthenticated
-                          ? 'Добавить квест в мои активные'
-                          : 'Войдите, чтобы активировать квест'}
+                          ? 'Add this quest to my active quests'
+                          : 'Sign in to activate this quest'}
                       </p>
                       {activationMessage && (
                         <p className="mt-1 text-xs text-emerald-300">
@@ -224,10 +224,10 @@ export default function QuestsShowcase({
                       className="rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:bg-slate-600"
                     >
                       {activatingQuestId === selectedQuest.id
-                        ? 'Добавляем...'
+                        ? 'Adding...'
                         : selectedQuest.is_active
                           ? 'Start Quest'
-                          : 'Недоступно'}
+                          : 'Unavailable'}
                     </button>
                   </div>
                 </div>
